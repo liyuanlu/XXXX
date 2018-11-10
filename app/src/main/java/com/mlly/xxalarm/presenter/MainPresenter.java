@@ -25,10 +25,16 @@ public class MainPresenter extends BasePresenter<MainModel,MainActivity> {
         return new MainModel(handler,mView.getApplicationContext());
     }
 
+    /**
+     * 开始定位
+     */
     public void startLocate(){
         mModel.startLocate();
     }
 
+    /**
+     * 请求天气
+     */
     private void requestWeatherData(){
         mModel.requestWeatherData();
     }
@@ -51,6 +57,7 @@ public class MainPresenter extends BasePresenter<MainModel,MainActivity> {
                     break;
             case MainModel.GET_FUTURE_WEATHER_SUCCESS:
                 mView.getFutureWeatherData(mModel.getFutureWeatherInfo());
+                mView.stopRefresh();
                 break;
             case MainModel.NULL_POINTER:
                 mView.showMessage("空指针异常");

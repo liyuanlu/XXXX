@@ -2,6 +2,7 @@ package com.mlly.xxalarm.model;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
@@ -19,6 +20,8 @@ import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by liyuanlu on 2018/11/10.
@@ -64,6 +67,10 @@ public class MainModel extends BaseModel {
         this.context = context;
     }
 
+    /**
+     * 获取未来天气对象
+     * @return
+     */
     public FutureWeatherInfo getFutureWeatherInfo(){
         if (mFutureWeatherInfo != null){
             return mFutureWeatherInfo;

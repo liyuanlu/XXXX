@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,9 @@ public class MainActivity extends BaseActivity<MainPresenter> {
 
     //拒绝的权限
     private List<String> deniedPermission = new ArrayList<>();
+
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     private TextView mNowTemperature;
     private ImageView mNowIcon;
     private TextView mNowText;
@@ -82,8 +86,6 @@ public class MainActivity extends BaseActivity<MainPresenter> {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         initPermission();
-        init();
-        mPresenter.startLocate();
     }
 
     /**
@@ -181,6 +183,9 @@ public class MainActivity extends BaseActivity<MainPresenter> {
         if (deniedPermission.size() != 0) {
             ActivityCompat.requestPermissions(this, deniedPermission.toArray(
                     new String[deniedPermission.size()]), 1);
+        }else {
+            init();
+            mPresenter.startLocate();
         }
     }
 
@@ -195,6 +200,9 @@ public class MainActivity extends BaseActivity<MainPresenter> {
                         return;
                     }
                 }
+                init();
+                mPresenter.startLocate();
+                break;
         }
     }
 
@@ -214,6 +222,19 @@ public class MainActivity extends BaseActivity<MainPresenter> {
         mAfterTomorrowLow = (TextView) view.findViewById(R.id.after_tomorrow_low);
         mAfterTomorrowHigh = (TextView) view.findViewById(R.id.after_tomorrow_high);
         mAfterTomorrowIcon = (ImageView) view.findViewById(R.id.after_tomorrow_icon);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPresenter.startLocate();
+            }
+        });
+    }
+
+    public void stopRefresh(){
+        if (mSwipeRefreshLayout.isRefreshing() && mSwipeRefreshLayout != null){
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     public void getNowWeatherData(NowWeatherInfo nowWeatherInfo){
