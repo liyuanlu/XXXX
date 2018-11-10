@@ -1,6 +1,7 @@
 package com.daobao.asus.dbbaseframe.mvp.presenter;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.arch.lifecycle.LifecycleOwner;
 import android.os.Handler;
 import android.os.Message;
@@ -48,6 +49,7 @@ public abstract class BasePresenter<M extends BaseModel,V extends IView> impleme
      *
      * @return BaseHandler
      */
+
     public Handler getHandler(){
         return new BaseHandler(this);
     }
@@ -55,6 +57,7 @@ public abstract class BasePresenter<M extends BaseModel,V extends IView> impleme
     /**
      * 基础Handler 用于P层与M层通信
      */
+
     public static class BaseHandler extends Handler{
 
         //弱引用Activity或者Fragment 避免Handler持有导致内存泄漏
