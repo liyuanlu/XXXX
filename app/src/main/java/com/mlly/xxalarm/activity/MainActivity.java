@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -72,7 +73,26 @@ public class MainActivity extends BaseActivity<MainPresenter> {
     private TextView mAfterTomorrowLow;
     private TextView mAfterTomorrowHigh;
     private ImageView mAfterTomorrowIcon;
+    private LinearLayout mLinearLayoutWeather;
 
+    //图标Id数组
+    private static int[] mIcons;
+
+    /**
+     * 初始化图标数组
+     */
+    static {
+         mIcons = new int[]{
+                R.drawable.w_0,R.drawable.w_1,R.drawable.w_2,R.drawable.w_3,R.drawable.w_4,
+                R.drawable.w_5,R.drawable.w_6,R.drawable.w_7,R.drawable.w_8,R.drawable.w_9,
+                R.drawable.w_10,R.drawable.w_11,R.drawable.w_12,R.drawable.w_13,R.drawable.w_14,
+                R.drawable.w_15,R.drawable.w_16,R.drawable.w_17,R.drawable.w_18,R.drawable.w_19,
+                R.drawable.w_20,R.drawable.w_21,R.drawable.w_22,R.drawable.w_23,R.drawable.w_24,
+                R.drawable.w_25,R.drawable.w_26,R.drawable.w_27,R.drawable.w_28,R.drawable.w_29,
+                R.drawable.w_30,R.drawable.w_31,R.drawable.w_32,R.drawable.w_33,R.drawable.w_34,
+                R.drawable.w_35,R.drawable.w_36,R.drawable.w_37,R.drawable.w_38,R.drawable.w_99
+        };
+    }
 
     @Override
     public MainPresenter binPresenter() {
@@ -222,6 +242,7 @@ public class MainActivity extends BaseActivity<MainPresenter> {
         mAfterTomorrowLow = (TextView) view.findViewById(R.id.after_tomorrow_low);
         mAfterTomorrowHigh = (TextView) view.findViewById(R.id.after_tomorrow_high);
         mAfterTomorrowIcon = (ImageView) view.findViewById(R.id.after_tomorrow_icon);
+        mLinearLayoutWeather = (LinearLayout)view.findViewById(R.id.linear_layout_weather);
         mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -231,41 +252,52 @@ public class MainActivity extends BaseActivity<MainPresenter> {
         });
     }
 
+    /**
+     * 获取到天气消息后停止刷新
+     */
     public void stopRefresh(){
         if (mSwipeRefreshLayout.isRefreshing() && mSwipeRefreshLayout != null){
             mSwipeRefreshLayout.setRefreshing(false);
+            Snackbar.make(mLinearLayoutWeather,"天气更新成功",Snackbar.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * 获取当前天气对象
+     * @param nowWeatherInfo
+     */
     public void getNowWeatherData(NowWeatherInfo nowWeatherInfo){
         if (nowWeatherInfo != null){
             NowWeatherInfo.ResultsBean.NowBean nowBean = nowWeatherInfo.getResults().get(0).getNow();
-            mNowIcon.setImageResource(R.drawable.w_0);
+            mNowIcon.setImageResource(mIcons[Integer.parseInt(nowBean.getCode())]);
             mNowTemperature.setText(nowBean.getTemperature());
             mNowText.setText(nowBean.getText());
         }else {
             showMessage("获取当前天气失败");
-            Log.d("MainActicity", "getFutureWeatherData: 获取当前天气失败");
         }
     }
 
+    /**
+     * 获取未来天气对象
+     * @param futureWeatherInfo
+     */
     public void getFutureWeatherData(FutureWeatherInfo futureWeatherInfo){
         if (futureWeatherInfo != null){
             List<FutureWeatherInfo.ResultsBean.DailyBean> dailyBeans =
                     futureWeatherInfo.getResults().get(0).getDaily();
             switch (dailyBeans.size()){
                 case 3:
-                    mAfterTomorrowIcon.setImageResource(R.drawable.w_0);
+                    mAfterTomorrowIcon.setImageResource(mIcons[Integer.parseInt(dailyBeans.get(2).getCode_day())]);
                     mAfterTomorrowHigh.setText(dailyBeans.get(2).getHigh());
                     mAfterTomorrowLow.setText(dailyBeans.get(2).getLow());
                     mAfterTomorrowText.setText(dailyBeans.get(2).getText_day());
                 case 2:
-                    mTomorrowIcon.setImageResource(R.drawable.w_0);
+                    mTomorrowIcon.setImageResource(mIcons[Integer.parseInt(dailyBeans.get(1).getCode_day())]);
                     mTomorrowHigh.setText(dailyBeans.get(1).getHigh());
                     mTomorrowLow.setText(dailyBeans.get(1).getLow());
                     mTomorrowText.setText(dailyBeans.get(1).getText_day());
                 case 1:
-                    mTodayIcon.setImageResource(R.drawable.w_0);
+                    mTodayIcon.setImageResource(mIcons[Integer.parseInt(dailyBeans.get(0).getCode_day())]);
                     mTodayHigh.setText(dailyBeans.get(0).getHigh());
                     mTodayLow.setText(dailyBeans.get(0).getLow());
                     mTodayText.setText(dailyBeans.get(0).getText_day());
@@ -275,7 +307,6 @@ public class MainActivity extends BaseActivity<MainPresenter> {
             }
         }else {
             showMessage("获取未来天气失败");
-            Log.d("MainActivity", "getFutureWeatherData: 获取未来天气失败");
         }
     }
 }
