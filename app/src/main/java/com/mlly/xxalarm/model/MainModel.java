@@ -231,6 +231,7 @@ public class MainModel extends BaseModel {
                 sendEmptyMessage(LOCATE_SUCCESS);
             }else {
                 sendEmptyMessage(LOCATE_FAILED);
+                Log.d(TAG, "onReceiveLocation: "+ bdLocation.getLocType());
             }
         }
 
