@@ -27,6 +27,7 @@ import com.daobao.asus.dbbaseframe.mvp.view.BaseActivity;
 import com.mlly.xxalarm.R;
 import com.mlly.xxalarm.presenter.MainPresenter;
 import com.mlly.xxalarm.weather.FutureWeatherInfo;
+import com.mlly.xxalarm.weather.LifeSuggestion;
 import com.mlly.xxalarm.weather.NowWeatherInfo;
 
 import java.util.ArrayList;
@@ -73,6 +74,18 @@ public class MainActivity extends BaseActivity<MainPresenter> {
     private TextView mAfterTomorrowLow;
     private TextView mAfterTomorrowHigh;
     private ImageView mAfterTomorrowIcon;
+    private TextView mCarWashing;
+    private TextView mDressing;
+    private TextView mFlu;
+    private TextView mSport;
+    private TextView mTravel;
+    private TextView mUV;
+    private ImageView mCarWashingIcon;
+    private ImageView mDressingIcon;
+    private ImageView mFluIcon;
+    private ImageView mSportIcon;
+    private ImageView mTravelIcon;
+    private ImageView mUVIcon;
     private LinearLayout mLinearLayoutWeather;
 
     //图标Id数组
@@ -243,6 +256,18 @@ public class MainActivity extends BaseActivity<MainPresenter> {
         mAfterTomorrowHigh = (TextView) view.findViewById(R.id.after_tomorrow_high);
         mAfterTomorrowIcon = (ImageView) view.findViewById(R.id.after_tomorrow_icon);
         mLinearLayoutWeather = (LinearLayout)view.findViewById(R.id.linear_layout_weather);
+        mCarWashing = (TextView)view.findViewById(R.id.car_washing);
+        mCarWashingIcon = (ImageView)view.findViewById(R.id.car_washing_icon);
+        mDressing = (TextView)view.findViewById(R.id.dressing);
+        mDressingIcon = (ImageView)view.findViewById(R.id.dressing_icon);
+        mFlu = (TextView)view.findViewById(R.id.flu);
+        mFluIcon = (ImageView)view.findViewById(R.id.flu_icon);
+        mSport = (TextView)view.findViewById(R.id.sport);
+        mSportIcon = (ImageView)view.findViewById(R.id.sport_icon);
+        mTravel = (TextView)view.findViewById(R.id.travel);
+        mTravelIcon = (ImageView)view.findViewById(R.id.travel_icon);
+        mUV = (TextView)view.findViewById(R.id.uv);
+        mUVIcon = (ImageView)view.findViewById(R.id.uv_icon);
         mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -263,7 +288,7 @@ public class MainActivity extends BaseActivity<MainPresenter> {
     }
 
     /**
-     * 获取当前天气对象
+     * 获取当前天气数据
      * @param nowWeatherInfo
      */
     public void getNowWeatherData(NowWeatherInfo nowWeatherInfo){
@@ -278,7 +303,7 @@ public class MainActivity extends BaseActivity<MainPresenter> {
     }
 
     /**
-     * 获取未来天气对象
+     * 获取未来天气数据
      * @param futureWeatherInfo
      */
     public void getFutureWeatherData(FutureWeatherInfo futureWeatherInfo){
@@ -307,6 +332,23 @@ public class MainActivity extends BaseActivity<MainPresenter> {
             }
         }else {
             showMessage("获取未来天气失败");
+        }
+    }
+
+    /**
+     * 获取生活建议数据
+     * @param lifeSuggestion
+     */
+    public void getLifeSuggestion(LifeSuggestion lifeSuggestion){
+        if (lifeSuggestion != null){
+            LifeSuggestion.ResultsBean.SuggestionBean suggestionBean = lifeSuggestion.getResults()
+                    .get(0).getSuggestion();
+            mCarWashing.setText(suggestionBean.getCar_washing().getBrief());
+            mDressing.setText(suggestionBean.getDressing().getBrief());
+            mFlu.setText(suggestionBean.getFlu().getBrief());
+            mSport.setText(suggestionBean.getSport().getBrief());
+            mTravel.setText(suggestionBean.getTravel().getBrief());
+            mUV.setText(suggestionBean.getUv().getBrief());
         }
     }
 }

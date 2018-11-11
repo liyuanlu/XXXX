@@ -12,6 +12,7 @@ import com.baidu.location.LocationClientOption;
 import com.daobao.asus.dbbaseframe.mvp.model.BaseModel;
 import com.google.gson.Gson;
 import com.mlly.xxalarm.weather.FutureWeatherInfo;
+import com.mlly.xxalarm.weather.LifeSuggestion;
 import com.mlly.xxalarm.weather.NowWeatherInfo;
 
 import java.io.IOException;
@@ -38,6 +39,8 @@ public class MainModel extends BaseModel {
 
     public static final int NULL_POINTER = 5;
 
+    public static final int GET_LIFE_SUGGESTION_SUCCESS = 6;
+
     //当前天气请求地址
     private static final String NOW_WEATHER_ADDRESS_HEAD = "https://api.seniverse.com/v3/weather/now.json?key=des12nko8oihfzte&location=";
 
@@ -47,6 +50,11 @@ public class MainModel extends BaseModel {
     private static final String FUTURE_WEATHER_ADDRESS_HEAD = "https://api.seniverse.com/v3/weather/daily.json?key=des12nko8oihfzte&location=";
 
     private static final String FUTURE_WEATHER_ADDRESS_TAIL = "&language=zh-Hans&unit=c&start=0&days=5";
+
+    //生活建议请求地址
+    private static final String LIFE_SUGGESTION_ADDRESS_HEAD = "https://api.seniverse.com/v3/life/suggestion.json?key=des12nko8oihfzte&location=";
+
+    private static final String LIFE_SUGGESTION_ADDRESS_TAIL = "&language=zh-Hans";
 
     private Context context;
 
@@ -62,9 +70,24 @@ public class MainModel extends BaseModel {
 
     private FutureWeatherInfo mFutureWeatherInfo;           //未来天气对象
 
+    private LifeSuggestion mLifeSuggestion;                 //生活建议对象
+
     public MainModel(Handler handler,Context context) {
         super(handler);
         this.context = context;
+    }
+
+    /**
+     * 获取生活建议对象
+     * @return
+     */
+    public LifeSuggestion getLifeSuggestion(){
+        if (mLifeSuggestion != null){
+            return mLifeSuggestion;
+        }else {
+            sendEmptyMessage(NULL_POINTER);
+            return null;
+        }
     }
 
     /**
@@ -136,6 +159,25 @@ public class MainModel extends BaseModel {
                         if (result != null){
                             mFutureWeatherInfo = mGson.fromJson(result,FutureWeatherInfo.class);
                             sendEmptyMessage(GET_FUTURE_WEATHER_SUCCESS);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+            Request lifeSuggestionRequest = new Request.Builder()
+                    .url(LIFE_SUGGESTION_ADDRESS_HEAD + mCityName + LIFE_SUGGESTION_ADDRESS_TAIL)
+                    .build();
+            Call lifeSuggestionCall = mOKHttpClient.newCall(lifeSuggestionRequest);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Response response = lifeSuggestionCall.execute();
+                        String result = response.body().string();
+                        if (result != null){
+                            mLifeSuggestion = mGson.fromJson(result,LifeSuggestion.class);
+                            sendEmptyMessage(GET_LIFE_SUGGESTION_SUCCESS);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

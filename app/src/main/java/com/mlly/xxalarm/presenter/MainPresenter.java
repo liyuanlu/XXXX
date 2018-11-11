@@ -57,6 +57,9 @@ public class MainPresenter extends BasePresenter<MainModel,MainActivity> {
                     break;
             case MainModel.GET_FUTURE_WEATHER_SUCCESS:
                 mView.getFutureWeatherData(mModel.getFutureWeatherInfo());
+                break;
+            case MainModel.GET_LIFE_SUGGESTION_SUCCESS:
+                mView.getLifeSuggestion(mModel.getLifeSuggestion());
                 mView.stopRefresh();
                 break;
             case MainModel.NULL_POINTER:

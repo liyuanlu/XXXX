@@ -13,16 +13,19 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/dp_10">
             <ImageView
-                android:id="@+id/image_1"
+                android:id="@+id/car_washing_icon"
+                android:src="@mipmap/ic_launcher"
                 android:layout_gravity="center"
                 android:layout_width="@android:dimen/notification_large_icon_width"
                 android:layout_height="@android:dimen/notification_large_icon_height" />
             <TextView
-                android:id="@+id/image_2"
+                android:id="@+id/car_washing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 />
         </LinearLayout>
     </LinearLayout>
@@ -31,16 +34,19 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/dp_10">
             <ImageView
-                android:id="@+id/image_3"
+                android:id="@+id/dressing_icon"
+                android:src="@mipmap/ic_launcher"
                 android:layout_gravity="center"
                 android:layout_width="@android:dimen/notification_large_icon_width"
                 android:layout_height="@android:dimen/notification_large_icon_height" />
             <TextView
-                android:id="@+id/image_4"
+                android:id="@+id/dressing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 />
         </LinearLayout>
     </LinearLayout>
@@ -48,16 +54,19 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/dp_10">
             <ImageView
-                android:id="@+id/image_5"
+                android:id="@+id/flu_icon"
                 android:layout_gravity="center"
+                android:src="@mipmap/ic_launcher"
                 android:layout_width="@android:dimen/notification_large_icon_width"
                 android:layout_height="@android:dimen/notification_large_icon_height" />
             <TextView
-                android:id="@+id/image_6"
+                android:id="@+id/flu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 />
         </LinearLayout>
     </LinearLayout>
@@ -65,16 +74,19 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/dp_10">
             <ImageView
-                android:id="@+id/image_7"
+                android:id="@+id/sport_icon"
                 android:layout_gravity="center"
+                android:src="@mipmap/ic_launcher"
                 android:layout_width="@android:dimen/notification_large_icon_width"
                 android:layout_height="@android:dimen/notification_large_icon_height" />
             <TextView
-                android:id="@+id/image_8"
+                android:id="@+id/sport"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 />
         </LinearLayout>
     </LinearLayout>
@@ -82,16 +94,19 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/dp_10">
             <ImageView
-                android:id="@+id/image_9"
+                android:id="@+id/travel_icon"
                 android:layout_gravity="center"
+                android:src="@mipmap/ic_launcher"
                 android:layout_width="@android:dimen/notification_large_icon_width"
                 android:layout_height="@android:dimen/notification_large_icon_height" />
             <TextView
-                android:id="@+id/image_10"
+                android:id="@+id/travel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 />
         </LinearLayout>
     </LinearLayout>
@@ -99,16 +114,19 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/dp_10">
             <ImageView
-                android:id="@+id/image_11"
+                android:id="@+id/uv_icon"
                 android:layout_gravity="center"
+                android:src="@mipmap/ic_launcher"
                 android:layout_width="@android:dimen/notification_large_icon_width"
                 android:layout_height="@android:dimen/notification_large_icon_height" />
             <TextView
-                android:id="@+id/image_12"
+                android:id="@+id/uv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 />
         </LinearLayout>
     </LinearLayout>
