@@ -145,9 +145,11 @@ public class MainActivity extends BaseActivity<MainPresenter> {
                 switch (mTabLayout.getSelectedTabPosition()) {
                     case 0:
                         mLinearLayout.setBackgroundColor(Color.BLACK);
+                        mTabLayout.setTabTextColors(ColorStateList.valueOf(Color.YELLOW));
                         break;
                     case 1:
                         mLinearLayout.setBackgroundColor(Color.GRAY);
+                        mTabLayout.setTabTextColors(ColorStateList.valueOf(Color.WHITE));
                         break;
                     default:
                         break;
