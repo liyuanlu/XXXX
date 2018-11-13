@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:paddingLeft="@dimen/dp_20"
+    android:paddingRight="@dimen/dp_20"
     >
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,19 +30,22 @@
                     android:layout_width="@android:dimen/notification_large_icon_width"
                     android:layout_height="@android:dimen/notification_large_icon_height"
                     android:layout_gravity="center"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@mipmap/ic_launcher"
+                    android:paddingTop="@dimen/dp_10"/>
 
                 <TextView
                     android:id="@+id/car_washing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:paddingBottom="@dimen/dp_5"/>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="#66CCFF" />
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/viewLine" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -53,19 +58,22 @@
                     android:layout_width="@android:dimen/notification_large_icon_width"
                     android:layout_height="@android:dimen/notification_large_icon_height"
                     android:layout_gravity="center"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@mipmap/ic_launcher"
+                    android:paddingTop="@dimen/dp_10"/>
 
                 <TextView
                     android:id="@+id/dressing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:paddingBottom="@dimen/dp_5"/>
             </LinearLayout>
         </LinearLayout>
         <View
-            android:layout_width="1px"
+            android:layout_width="@dimen/dp_1"
             android:layout_height="fill_parent"
-            android:background="#66CCFF"
+            android:background="@color/viewLine"
             />
 
         <LinearLayout
@@ -85,19 +93,22 @@
                     android:layout_width="@android:dimen/notification_large_icon_width"
                     android:layout_height="@android:dimen/notification_large_icon_height"
                     android:layout_gravity="center"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@mipmap/ic_launcher"
+                    android:paddingTop="@dimen/dp_10"/>
 
                 <TextView
                     android:id="@+id/flu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:paddingBottom="@dimen/dp_5"/>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="#66CCFF" />
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/viewLine" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -110,19 +121,22 @@
                     android:layout_width="@android:dimen/notification_large_icon_width"
                     android:layout_height="@android:dimen/notification_large_icon_height"
                     android:layout_gravity="center"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@mipmap/ic_launcher"
+                    android:paddingTop="@dimen/dp_10"/>
 
                 <TextView
                     android:id="@+id/sport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:paddingBottom="@dimen/dp_5"/>
             </LinearLayout>
         </LinearLayout>
         <View
-            android:layout_width="1px"
+            android:layout_width="@dimen/dp_1"
             android:layout_height="fill_parent"
-            android:background="#66CCFF"
+            android:background="@color/viewLine"
             />
         <LinearLayout
             android:layout_width="0dp"
@@ -139,17 +153,20 @@
                 android:layout_gravity="center"
                 android:src="@mipmap/ic_launcher"
                 android:layout_width="@android:dimen/notification_large_icon_width"
-                android:layout_height="@android:dimen/notification_large_icon_height" />
+                android:layout_height="@android:dimen/notification_large_icon_height"
+                android:paddingTop="@dimen/dp_10"/>
             <TextView
                 android:id="@+id/travel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:paddingBottom="@dimen/dp_5"
                 />
             </LinearLayout>
-            <View  android:layout_height="1px"
+            <View  android:layout_height="@dimen/dp_1"
                 android:layout_width="match_parent"
-                android:background="#66CCFF"
+                android:background="@color/viewLine"
                 />
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -161,12 +178,15 @@
                 android:layout_gravity="center"
                 android:src="@mipmap/ic_launcher"
                 android:layout_width="@android:dimen/notification_large_icon_width"
-                android:layout_height="@android:dimen/notification_large_icon_height" />
+                android:layout_height="@android:dimen/notification_large_icon_height"
+                android:paddingTop="@dimen/dp_10"/>
             <TextView
                 android:id="@+id/uv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:paddingBottom="@dimen/dp_5"
                 />
             </LinearLayout>
         </LinearLayout>

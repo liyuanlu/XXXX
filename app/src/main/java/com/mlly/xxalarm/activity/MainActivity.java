@@ -1,6 +1,7 @@
 package com.mlly.xxalarm.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -148,7 +149,7 @@ public class MainActivity extends BaseActivity<MainPresenter> {
                         mTabLayout.setTabTextColors(ColorStateList.valueOf(Color.YELLOW));
                         break;
                     case 1:
-                        mLinearLayout.setBackgroundColor(Color.GRAY);
+                        mLinearLayout.setBackgroundResource(R.drawable.weather_background_day);
                         mTabLayout.setTabTextColors(ColorStateList.valueOf(Color.WHITE));
                         break;
                     default:
@@ -282,10 +283,13 @@ public class MainActivity extends BaseActivity<MainPresenter> {
     /**
      * 获取到天气消息后停止刷新
      */
+    @SuppressLint("ResourceAsColor")
     public void stopRefresh(){
         if (mSwipeRefreshLayout.isRefreshing() && mSwipeRefreshLayout != null){
             mSwipeRefreshLayout.setRefreshing(false);
-            Snackbar.make(mLinearLayoutWeather,"天气更新成功",Snackbar.LENGTH_SHORT).show();
+            Snackbar snackbar = Snackbar.make(mLinearLayoutWeather,"天气更新成功",Snackbar.LENGTH_SHORT);
+            snackbar.getView().setBackgroundColor(R.color.snackbar);
+            snackbar.show();
         }
     }
 
