@@ -2,14 +2,9 @@ package com.mlly.xxalarm.presenter;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.widget.Toast;
-
 import com.daobao.asus.dbbaseframe.mvp.presenter.BasePresenter;
 import com.mlly.xxalarm.activity.MainActivity;
 import com.mlly.xxalarm.model.MainModel;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by liyuanlu on 2018/11/10.
@@ -33,6 +28,13 @@ public class MainPresenter extends BasePresenter<MainModel,MainActivity> {
     }
 
     /**
+     * 停止定位
+     */
+    public void stopLoacte(){
+        mModel.stopLocate();
+    }
+
+    /**
      * 请求天气
      */
     private void requestWeatherData(){
@@ -50,7 +52,8 @@ public class MainPresenter extends BasePresenter<MainModel,MainActivity> {
                 requestWeatherData();
                 break;
             case MainModel.LOCATE_FAILED:
-                mView.showMessage("定位失败");
+                mView.showMessage("定位失败:"+mModel.getLocType());
+                mView.stopRefresh();
                 break;
             case MainModel.GET_NOW_WEATHER_SUCCESS:
                 mView.getNowWeatherData(mModel.getNowWeatherInfo());
@@ -60,12 +63,20 @@ public class MainPresenter extends BasePresenter<MainModel,MainActivity> {
                 break;
             case MainModel.GET_LIFE_SUGGESTION_SUCCESS:
                 mView.getLifeSuggestion(mModel.getLifeSuggestion());
-                mView.stopRefresh();
+                if (mModel.getLocType() == 161){
+                    if (mModel.getFutureWeatherInfo() == null && mModel.getNowWeatherInfo() == null
+                            && mModel.getLifeSuggestion() == null){
+                        mView.refreshFailed();
+                    }else {
+                        mView.refreshSuccess();
+                    }
+                }
                 break;
             case MainModel.NULL_POINTER:
                 mView.showMessage("空指针异常");
-                Log.d(TAG, "modelResponse: 空指针异常");
                     break;
+            case MainModel.REFRESH_FINISHED:
+                mView.stopRefresh();
                 default:break;
         }
     }

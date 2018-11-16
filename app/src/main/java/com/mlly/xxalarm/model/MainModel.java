@@ -41,6 +41,8 @@ public class MainModel extends BaseModel {
 
     public static final int GET_LIFE_SUGGESTION_SUCCESS = 6;
 
+    public static final int REFRESH_FINISHED = 7;
+
     //当前天气请求地址
     private static final String NOW_WEATHER_ADDRESS_HEAD = "https://api.seniverse.com/v3/weather/now.json?key=des12nko8oihfzte&location=";
 
@@ -72,6 +74,8 @@ public class MainModel extends BaseModel {
 
     private LifeSuggestion mLifeSuggestion;                 //生活建议对象
 
+    private int mLocType = 0;                               //定位返回值
+
     public MainModel(Handler handler,Context context) {
         super(handler);
         this.context = context;
@@ -82,7 +86,7 @@ public class MainModel extends BaseModel {
      * @return
      */
     public LifeSuggestion getLifeSuggestion(){
-        if (mLifeSuggestion != null){
+        if (mLifeSuggestion != null && mLifeSuggestion.getResults() != null){
             return mLifeSuggestion;
         }else {
             sendEmptyMessage(NULL_POINTER);
@@ -95,7 +99,7 @@ public class MainModel extends BaseModel {
      * @return
      */
     public FutureWeatherInfo getFutureWeatherInfo(){
-        if (mFutureWeatherInfo != null){
+        if (mFutureWeatherInfo != null && mFutureWeatherInfo.getResults() != null){
             return mFutureWeatherInfo;
         }else {
             sendEmptyMessage(NULL_POINTER);
@@ -108,7 +112,7 @@ public class MainModel extends BaseModel {
      * @return
      */
     public NowWeatherInfo getNowWeatherInfo(){
-        if (mNowWeatherInfo != null){
+        if (mNowWeatherInfo != null && mNowWeatherInfo.getResults() != null){
             return mNowWeatherInfo;
         }else {
             sendEmptyMessage(NULL_POINTER);
@@ -201,6 +205,20 @@ public class MainModel extends BaseModel {
     }
 
     /**
+     * 停止定位
+     */
+    public void stopLocate(){
+        mLocationClient.stop();
+    }
+
+    /**
+     * 获取定位返回值
+     */
+    public int getLocType(){
+        return mLocType;
+    }
+
+    /**
      * 获取当前完整城市名
      * @return
      */
@@ -222,16 +240,18 @@ public class MainModel extends BaseModel {
 
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
-            if (bdLocation.getLocType() == 161){
+            mLocType = bdLocation.getLocType();
+            Log.d(TAG, "location" + bdLocation.getLongitude() + " " + bdLocation.getLatitude());
+            if (mLocType == 161){
                 province = bdLocation.getProvince();
                 city = bdLocation.getCity();
                 getCityWholeName();
                 mCityName = cityName;
                 //向P层发送消息
                 sendEmptyMessage(LOCATE_SUCCESS);
-            }else {
+                sendEmptyMessage(REFRESH_FINISHED);
+            }else{
                 sendEmptyMessage(LOCATE_FAILED);
-                Log.d(TAG, "onReceiveLocation: "+ bdLocation.getLocType());
             }
         }
 

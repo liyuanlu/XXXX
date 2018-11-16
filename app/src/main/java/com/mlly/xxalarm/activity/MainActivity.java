@@ -1,39 +1,34 @@
 package com.mlly.xxalarm.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.daobao.asus.dbbaseframe.mvp.view.BaseActivity;
 import com.mlly.xxalarm.R;
+import com.mlly.xxalarm.adapter.MViewPagerAdapter;
+import com.mlly.xxalarm.fragment.MyFragment;
+import com.mlly.xxalarm.fragment.WeatherFragment;
 import com.mlly.xxalarm.presenter.MainPresenter;
+import com.mlly.xxalarm.transformer.ZoomOutTransformer;
 import com.mlly.xxalarm.weather.FutureWeatherInfo;
 import com.mlly.xxalarm.weather.LifeSuggestion;
 import com.mlly.xxalarm.weather.NowWeatherInfo;
-
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class MainActivity extends BaseActivity<MainPresenter> {
 
@@ -43,10 +38,11 @@ public class MainActivity extends BaseActivity<MainPresenter> {
 
     private LinearLayout mLinearLayout;                 //根布局
 
-    private ArrayList<View> mViews;                     //存放显示在ViewPaper上的对象
+    private List<String> mTitles;                       //Tab标题
 
-    //Tab标题
-    private String[] mTitles = new String[]{"闹钟", "天气"};
+    private List<Fragment> mFragments;                  //存放Fragment
+
+    private WeatherFragment mWeatherFragment;           //天气Fragment
 
     //将要申请的权限
     private String[] permissions = new String[]{
@@ -57,56 +53,6 @@ public class MainActivity extends BaseActivity<MainPresenter> {
 
     //拒绝的权限
     private List<String> deniedPermission = new ArrayList<>();
-
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-
-    private TextView mNowTemperature;
-    private ImageView mNowIcon;
-    private TextView mNowText;
-    private TextView mTodayText;
-    private TextView mTodayLow;
-    private TextView mTodayHigh;
-    private ImageView mTodayIcon;
-    private TextView mTomorrowText;
-    private TextView mTomorrowLow;
-    private TextView mTomorrowHigh;
-    private ImageView mTomorrowIcon;
-    private TextView mAfterTomorrowText;
-    private TextView mAfterTomorrowLow;
-    private TextView mAfterTomorrowHigh;
-    private ImageView mAfterTomorrowIcon;
-    private TextView mCarWashing;
-    private TextView mDressing;
-    private TextView mFlu;
-    private TextView mSport;
-    private TextView mTravel;
-    private TextView mUV;
-    private ImageView mCarWashingIcon;
-    private ImageView mDressingIcon;
-    private ImageView mFluIcon;
-    private ImageView mSportIcon;
-    private ImageView mTravelIcon;
-    private ImageView mUVIcon;
-    private LinearLayout mLinearLayoutWeather;
-
-    //图标Id数组
-    private static int[] mIcons;
-
-    /**
-     * 初始化图标数组
-     */
-    static {
-         mIcons = new int[]{
-                R.drawable.w_0,R.drawable.w_1,R.drawable.w_2,R.drawable.w_3,R.drawable.w_4,
-                R.drawable.w_5,R.drawable.w_6,R.drawable.w_7,R.drawable.w_8,R.drawable.w_9,
-                R.drawable.w_10,R.drawable.w_11,R.drawable.w_12,R.drawable.w_13,R.drawable.w_14,
-                R.drawable.w_15,R.drawable.w_16,R.drawable.w_17,R.drawable.w_18,R.drawable.w_19,
-                R.drawable.w_20,R.drawable.w_21,R.drawable.w_22,R.drawable.w_23,R.drawable.w_24,
-                R.drawable.w_25,R.drawable.w_26,R.drawable.w_27,R.drawable.w_28,R.drawable.w_29,
-                R.drawable.w_30,R.drawable.w_31,R.drawable.w_32,R.drawable.w_33,R.drawable.w_34,
-                R.drawable.w_35,R.drawable.w_36,R.drawable.w_37,R.drawable.w_38,R.drawable.w_99
-        };
-    }
 
     @Override
     public MainPresenter binPresenter() {
@@ -139,18 +85,33 @@ public class MainActivity extends BaseActivity<MainPresenter> {
     private void init() {
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mViewPaper = (ViewPager) findViewById(R.id.view_paper);
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            //切换Tab时更换背景色
+        mFragments = new ArrayList<>();
+        mTitles = new ArrayList<>();
+        mLinearLayout = (LinearLayout) findViewById(R.id.linear_layout);
+        mLinearLayout.setBackgroundResource(R.mipmap.weather_background_day);
+        mTabLayout.setTabTextColors(ColorStateList.valueOf(Color.WHITE));
+        mWeatherFragment = new WeatherFragment();
+        mFragments.add(mWeatherFragment);
+        mFragments.add(new MyFragment());
+        mTitles.add("天气");
+        mTitles.add("闹钟");
+        MViewPagerAdapter mViewPagerAdapter = new MViewPagerAdapter(getSupportFragmentManager(),
+                mTitles,mFragments);
+        mViewPaper.setAdapter(mViewPagerAdapter);
+        mTabLayout.setupWithViewPager(mViewPaper);
+        mViewPaper.setPageTransformer(true,new ZoomOutTransformer());
+        mViewPaper.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                switch (mTabLayout.getSelectedTabPosition()) {
-                    case 0:
-                        mLinearLayout.setBackgroundColor(Color.BLACK);
-                        mTabLayout.setTabTextColors(ColorStateList.valueOf(Color.YELLOW));
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                switch (i){
+                    case 0:mLinearLayout.setBackgroundResource(R.mipmap.weather_background_day);
                         break;
-                    case 1:
-                        mLinearLayout.setBackgroundResource(R.drawable.weather_background_day);
-                        mTabLayout.setTabTextColors(ColorStateList.valueOf(Color.WHITE));
+                    case 1:mLinearLayout.setBackgroundResource(R.color.grey);
                         break;
                     default:
                         break;
@@ -158,57 +119,43 @@ public class MainActivity extends BaseActivity<MainPresenter> {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            public void onPageScrollStateChanged(int i) {
 
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-        mLinearLayout = (LinearLayout) findViewById(R.id.linear_layout);
-        mTabLayout.setTabTextColors(ColorStateList.valueOf(Color.WHITE));
-        View alarm = getLayoutInflater().inflate(R.layout.layout_alarm, null);
-        View weather = getLayoutInflater().inflate(R.layout.layout_weather, null);
-        initView(weather);
-        mViews = new ArrayList<>();
-        mViews.add(alarm);
-        mViews.add(weather);
-        mTabLayout.setupWithViewPager(mViewPaper);
-        //添加适配器
-        mViewPaper.setAdapter(new PagerAdapter() {
-            @Override
-            public int getCount() {
-                return mViews.size();
-            }
-
-            @Override
-            public boolean isViewFromObject(@NonNull View view, @NonNull Object o) {
-                return view == o;
-            }
-
-            @NonNull
-            @Override
-            public Object instantiateItem(@NonNull ViewGroup container, int position) {
-                View view = mViews.get(position);
-                container.addView(view);
-                return view;
-            }
-
-            @Override
-            public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-                container.removeView((View) object);
-            }
-
-            @Nullable
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return mTitles[position];
             }
         });
     }
 
+    /**
+     * 获取当前天气数据
+     * @param nowWeatherInfo
+     */
+    public void getNowWeatherData(NowWeatherInfo nowWeatherInfo){
+        mWeatherFragment.getNowWeatherData(nowWeatherInfo);
+    }
+
+    /**
+     * 获取未来天气数据
+     * @param futureWeatherInfo
+     */
+    public void getFutureWeatherData(FutureWeatherInfo futureWeatherInfo){
+        mWeatherFragment.getFutureWeatherData(futureWeatherInfo);
+    }
+
+    /**
+     * 获取生活建议
+     * @param lifeSuggestion
+     */
+    public void getLifeSuggestion(LifeSuggestion lifeSuggestion){
+        mWeatherFragment.getLifeSuggestion(lifeSuggestion);
+    }
+
+    public void stopRefresh(){
+        mWeatherFragment.stopRefresh();
+    }
+
+    /**
+     * 检查并申请权限
+     */
     private void initPermission() {
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) !=
@@ -221,10 +168,38 @@ public class MainActivity extends BaseActivity<MainPresenter> {
                     new String[deniedPermission.size()]), 1);
         }else {
             init();
-            mPresenter.startLocate();
+            startLocate();
         }
     }
 
+    /**
+     * 开始定位
+     */
+    public void startLocate(){
+        mPresenter.startLocate();
+    }
+
+    /**
+     * 停止定位
+     */
+    public void stopLocate(){
+        mPresenter.stopLoacte();
+    }
+
+    public void refreshSuccess(){
+        mWeatherFragment.refreshSuccess();
+    }
+
+    public void refreshFailed(){
+        mWeatherFragment.refreshFailed();
+    }
+
+    /**
+     * 申请权限回调
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -237,124 +212,8 @@ public class MainActivity extends BaseActivity<MainPresenter> {
                     }
                 }
                 init();
-                mPresenter.startLocate();
+                startLocate();
                 break;
-        }
-    }
-
-    private void initView(View view) {
-        mNowTemperature = (TextView) view.findViewById(R.id.now_temperature);
-        mNowIcon = (ImageView) view.findViewById(R.id.now_icon);
-        mNowText = (TextView) view.findViewById(R.id.now_text);
-        mTodayText = (TextView) view.findViewById(R.id.today_text);
-        mTodayLow = (TextView) view.findViewById(R.id.today_low);
-        mTodayHigh = (TextView) view.findViewById(R.id.today_high);
-        mTodayIcon = (ImageView) view.findViewById(R.id.today_icon);
-        mTomorrowText = (TextView) view.findViewById(R.id.tomorrow_text);
-        mTomorrowLow = (TextView) view.findViewById(R.id.tomorrow_low);
-        mTomorrowHigh = (TextView) view.findViewById(R.id.tomorrow_high);
-        mTomorrowIcon = (ImageView) view.findViewById(R.id.tomorrow_icon);
-        mAfterTomorrowText = (TextView) view.findViewById(R.id.after_tomorrow_text);
-        mAfterTomorrowLow = (TextView) view.findViewById(R.id.after_tomorrow_low);
-        mAfterTomorrowHigh = (TextView) view.findViewById(R.id.after_tomorrow_high);
-        mAfterTomorrowIcon = (ImageView) view.findViewById(R.id.after_tomorrow_icon);
-        mLinearLayoutWeather = (LinearLayout)view.findViewById(R.id.linear_layout_weather);
-        mCarWashing = (TextView)view.findViewById(R.id.car_washing);
-        mCarWashingIcon = (ImageView)view.findViewById(R.id.car_washing_icon);
-        mDressing = (TextView)view.findViewById(R.id.dressing);
-        mDressingIcon = (ImageView)view.findViewById(R.id.dressing_icon);
-        mFlu = (TextView)view.findViewById(R.id.flu);
-        mFluIcon = (ImageView)view.findViewById(R.id.flu_icon);
-        mSport = (TextView)view.findViewById(R.id.sport);
-        mSportIcon = (ImageView)view.findViewById(R.id.sport_icon);
-        mTravel = (TextView)view.findViewById(R.id.travel);
-        mTravelIcon = (ImageView)view.findViewById(R.id.travel_icon);
-        mUV = (TextView)view.findViewById(R.id.uv);
-        mUVIcon = (ImageView)view.findViewById(R.id.uv_icon);
-        mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mPresenter.startLocate();
-            }
-        });
-    }
-
-    /**
-     * 获取到天气消息后停止刷新
-     */
-    @SuppressLint("ResourceAsColor")
-    public void stopRefresh(){
-        if (mSwipeRefreshLayout.isRefreshing() && mSwipeRefreshLayout != null){
-            mSwipeRefreshLayout.setRefreshing(false);
-            Snackbar snackbar = Snackbar.make(mLinearLayoutWeather,"天气更新成功",Snackbar.LENGTH_SHORT);
-            snackbar.getView().setBackgroundColor(R.color.snackbar);
-            snackbar.show();
-        }
-    }
-
-    /**
-     * 获取当前天气数据
-     * @param nowWeatherInfo
-     */
-    public void getNowWeatherData(NowWeatherInfo nowWeatherInfo){
-        if (nowWeatherInfo != null){
-            NowWeatherInfo.ResultsBean.NowBean nowBean = nowWeatherInfo.getResults().get(0).getNow();
-            mNowIcon.setImageResource(mIcons[Integer.parseInt(nowBean.getCode())]);
-            mNowTemperature.setText(nowBean.getTemperature());
-            mNowText.setText(nowBean.getText());
-        }else {
-            showMessage("获取当前天气失败");
-        }
-    }
-
-    /**
-     * 获取未来天气数据
-     * @param futureWeatherInfo
-     */
-    public void getFutureWeatherData(FutureWeatherInfo futureWeatherInfo){
-        if (futureWeatherInfo != null){
-            List<FutureWeatherInfo.ResultsBean.DailyBean> dailyBeans =
-                    futureWeatherInfo.getResults().get(0).getDaily();
-            switch (dailyBeans.size()){
-                case 3:
-                    mAfterTomorrowIcon.setImageResource(mIcons[Integer.parseInt(dailyBeans.get(2).getCode_day())]);
-                    mAfterTomorrowHigh.setText(dailyBeans.get(2).getHigh());
-                    mAfterTomorrowLow.setText(dailyBeans.get(2).getLow());
-                    mAfterTomorrowText.setText(dailyBeans.get(2).getText_day());
-                case 2:
-                    mTomorrowIcon.setImageResource(mIcons[Integer.parseInt(dailyBeans.get(1).getCode_day())]);
-                    mTomorrowHigh.setText(dailyBeans.get(1).getHigh());
-                    mTomorrowLow.setText(dailyBeans.get(1).getLow());
-                    mTomorrowText.setText(dailyBeans.get(1).getText_day());
-                case 1:
-                    mTodayIcon.setImageResource(mIcons[Integer.parseInt(dailyBeans.get(0).getCode_day())]);
-                    mTodayHigh.setText(dailyBeans.get(0).getHigh());
-                    mTodayLow.setText(dailyBeans.get(0).getLow());
-                    mTodayText.setText(dailyBeans.get(0).getText_day());
-                    break;
-                default:showMessage("获取未来天气失败");
-                    break;
-            }
-        }else {
-            showMessage("获取未来天气失败");
-        }
-    }
-
-    /**
-     * 获取生活建议数据
-     * @param lifeSuggestion
-     */
-    public void getLifeSuggestion(LifeSuggestion lifeSuggestion){
-        if (lifeSuggestion != null){
-            LifeSuggestion.ResultsBean.SuggestionBean suggestionBean = lifeSuggestion.getResults()
-                    .get(0).getSuggestion();
-            mCarWashing.setText(suggestionBean.getCar_washing().getBrief());
-            mDressing.setText(suggestionBean.getDressing().getBrief());
-            mFlu.setText(suggestionBean.getFlu().getBrief());
-            mSport.setText(suggestionBean.getSport().getBrief());
-            mTravel.setText(suggestionBean.getTravel().getBrief());
-            mUV.setText(suggestionBean.getUv().getBrief());
         }
     }
 }

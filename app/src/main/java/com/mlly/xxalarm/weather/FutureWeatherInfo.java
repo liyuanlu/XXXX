@@ -1,11 +1,15 @@
 package com.mlly.xxalarm.weather;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by liyuanlu on 2018/11/9.
  */
-public class FutureWeatherInfo {
+public class FutureWeatherInfo implements Parcelable {
 
     private List<ResultsBean> results;
 
@@ -244,4 +248,34 @@ public class FutureWeatherInfo {
             }
         }
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeList(this.results);
+    }
+
+    public FutureWeatherInfo() {
+    }
+
+    protected FutureWeatherInfo(Parcel in) {
+        this.results = new ArrayList<ResultsBean>();
+        in.readList(this.results, ResultsBean.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<FutureWeatherInfo> CREATOR = new Parcelable.Creator<FutureWeatherInfo>() {
+        @Override
+        public FutureWeatherInfo createFromParcel(Parcel source) {
+            return new FutureWeatherInfo(source);
+        }
+
+        @Override
+        public FutureWeatherInfo[] newArray(int size) {
+            return new FutureWeatherInfo[size];
+        }
+    };
 }
