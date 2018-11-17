@@ -12,8 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -24,9 +22,6 @@ import com.mlly.xxalarm.fragment.MyFragment;
 import com.mlly.xxalarm.fragment.WeatherFragment;
 import com.mlly.xxalarm.presenter.MainPresenter;
 import com.mlly.xxalarm.transformer.ZoomOutTransformer;
-import com.mlly.xxalarm.weather.FutureWeatherInfo;
-import com.mlly.xxalarm.weather.LifeSuggestion;
-import com.mlly.xxalarm.weather.NowWeatherInfo;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,34 +121,6 @@ public class MainActivity extends BaseActivity<MainPresenter> {
     }
 
     /**
-     * 获取当前天气数据
-     * @param nowWeatherInfo
-     */
-    public void getNowWeatherData(NowWeatherInfo nowWeatherInfo){
-        mWeatherFragment.getNowWeatherData(nowWeatherInfo);
-    }
-
-    /**
-     * 获取未来天气数据
-     * @param futureWeatherInfo
-     */
-    public void getFutureWeatherData(FutureWeatherInfo futureWeatherInfo){
-        mWeatherFragment.getFutureWeatherData(futureWeatherInfo);
-    }
-
-    /**
-     * 获取生活建议
-     * @param lifeSuggestion
-     */
-    public void getLifeSuggestion(LifeSuggestion lifeSuggestion){
-        mWeatherFragment.getLifeSuggestion(lifeSuggestion);
-    }
-
-    public void stopRefresh(){
-        mWeatherFragment.stopRefresh();
-    }
-
-    /**
      * 检查并申请权限
      */
     private void initPermission() {
@@ -168,30 +135,7 @@ public class MainActivity extends BaseActivity<MainPresenter> {
                     new String[deniedPermission.size()]), 1);
         }else {
             init();
-            startLocate();
         }
-    }
-
-    /**
-     * 开始定位
-     */
-    public void startLocate(){
-        mPresenter.startLocate();
-    }
-
-    /**
-     * 停止定位
-     */
-    public void stopLocate(){
-        mPresenter.stopLoacte();
-    }
-
-    public void refreshSuccess(){
-        mWeatherFragment.refreshSuccess();
-    }
-
-    public void refreshFailed(){
-        mWeatherFragment.refreshFailed();
     }
 
     /**
@@ -212,7 +156,6 @@ public class MainActivity extends BaseActivity<MainPresenter> {
                     }
                 }
                 init();
-                startLocate();
                 break;
         }
     }

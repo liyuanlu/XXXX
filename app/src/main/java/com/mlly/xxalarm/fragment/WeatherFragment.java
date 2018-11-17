@@ -1,5 +1,6 @@
 package com.mlly.xxalarm.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,9 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cleveroad.pulltorefresh.firework.FireworkyPullToRefreshLayout;
+import com.daobao.asus.dbbaseframe.mvp.view.BaseFragment;
 import com.mlly.xxalarm.R;
 import com.mlly.xxalarm.activity.MainActivity;
+import com.mlly.xxalarm.presenter.WeatherFragmentPresenter;
 import com.mlly.xxalarm.weather.FutureWeatherInfo;
+import com.mlly.xxalarm.weather.GridWeatherInfo;
 import com.mlly.xxalarm.weather.LifeSuggestion;
 import com.mlly.xxalarm.weather.NowWeatherInfo;
 
@@ -28,7 +32,7 @@ import static android.content.ContentValues.TAG;
 /**
  * Created by liyuanlu on 2018/11/15.
  */
-public class WeatherFragment extends Fragment {
+public class WeatherFragment extends BaseFragment<WeatherFragmentPresenter> {
 
     private TextView mNowTemperature;
     private ImageView mNowIcon;
@@ -57,7 +61,16 @@ public class WeatherFragment extends Fragment {
     private TextView mTravel;
     private ImageView mUvIcon;
     private TextView mUV;
+    private TextView mNowAddress;
+    private TextView mWindDirection;
+    private TextView mWindDerectionDegree;
+    private TextView mWindScale;
+    private TextView mWindSpeed;
+    private TextView mTemperature;
+    private TextView mPressure;
     private FireworkyPullToRefreshLayout mSwipeRefreshLayout;
+
+    private boolean firstLoad = false;
 
     private View view;
 
@@ -85,12 +98,13 @@ public class WeatherFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.layout_weather,container,false);
-        init();
+        Log.d(TAG, "onCreateView: ");
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        init();
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -125,17 +139,26 @@ public class WeatherFragment extends Fragment {
         mTravel = (TextView) view.findViewById(R.id.travel);
         mUvIcon = (ImageView) view.findViewById(R.id.uv_icon);
         mUV = (TextView) view.findViewById(R.id.uv);
+        mNowAddress = (TextView)view.findViewById(R.id.now_address);
+        mWindDirection = (TextView)view.findViewById(R.id.wind_direction);
+        mWindDerectionDegree = (TextView)view.findViewById(R.id.wind_direction_degree);
+        mWindScale = (TextView)view.findViewById(R.id.wind_scale);
+        mWindSpeed = (TextView)view.findViewById(R.id.wind_speed);
+        mTemperature = (TextView)view.findViewById(R.id.temperature);
+        mPressure = (TextView)view.findViewById(R.id.pressure);
         mSwipeRefreshLayout = (FireworkyPullToRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         //设置监听器
         mSwipeRefreshLayout.setOnRefreshListener(new FireworkyPullToRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                MainActivity activity = (MainActivity) getActivity();
-                if (activity != null){
-                    activity.startLocate();
-                }
+                startLoacte();
             }
         });
+        mPresenter.startLocate();
+    }
+
+    public void getNowAddress(String address){
+        mNowAddress.setText(address);
     }
 
     /**
@@ -168,7 +191,7 @@ public class WeatherFragment extends Fragment {
      * 使用Snackbar提示消息
      * @param message
      */
-    private void showMessage(String message) {
+    public void showMessage(String message) {
         if (snackbar == null){
             snackbar = Snackbar.make(view,message,Snackbar.LENGTH_SHORT);
             snackbar.show();
@@ -227,6 +250,19 @@ public class WeatherFragment extends Fragment {
         }
     }
 
+    public void getGridWeather(GridWeatherInfo gridWeatherInfo){
+        if (gridWeatherInfo != null){
+            GridWeatherInfo.ResultsBean.NowGridBean nowGridBean = gridWeatherInfo.getResults().get(0)
+                    .getNow_grid();
+            mPressure.setText(nowGridBean.getPressure());
+            mTemperature.setText(nowGridBean.getTemperature());
+            mWindSpeed.setText(nowGridBean.getWind_speed());
+            mWindScale.setText(nowGridBean.getWind_scale());
+            mWindDerectionDegree.setText(nowGridBean.getWind_direction_degree());
+            mWindDirection.setText(nowGridBean.getWind_direction());
+        }
+    }
+
     public void stopRefresh(){
         if (mSwipeRefreshLayout != null && mSwipeRefreshLayout.isRefreshing()){
             getActivity().runOnUiThread(new Runnable() {
@@ -236,5 +272,25 @@ public class WeatherFragment extends Fragment {
                 }
             });
         }
+    }
+
+    public void startLoacte(){
+        mPresenter.startLocate();
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+        });
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected WeatherFragmentPresenter binPresenter() {
+        return new WeatherFragmentPresenter(this);
     }
 }

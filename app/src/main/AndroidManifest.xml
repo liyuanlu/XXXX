@@ -24,7 +24,8 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="pDkc2Gr2O1Ks4yVdKrveSw290Vvo7bq9"></meta-data>
 
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.MainActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

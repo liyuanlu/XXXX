@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class MViewPagerAdapter extends FragmentPagerAdapter {
 
-    private List<String> titles;
+    private List<String> titles;            //Tab标题
 
-    private List<Fragment> fragments;
+    private List<Fragment> fragments;       //需要用到的Fragment
 
     public MViewPagerAdapter(FragmentManager fm,List<String> titles,List<Fragment> fragments) {
         super(fm);

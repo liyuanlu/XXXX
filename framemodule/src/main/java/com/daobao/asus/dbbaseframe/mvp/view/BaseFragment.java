@@ -20,7 +20,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment imp
 
     public P mPresenter;
 
-    abstract P binPresenter();
+    protected abstract P binPresenter();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

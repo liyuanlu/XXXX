@@ -18,6 +18,8 @@
             <include layout="@layout/layout_future_weather"/>
 
             <include layout="@layout/layout_suggestion"/>
+
+            <include layout="@layout/layout_grid_weather"/>
         </LinearLayout>
     </ScrollView>
 </com.cleveroad.pulltorefresh.firework.FireworkyPullToRefreshLayout>
