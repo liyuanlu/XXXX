@@ -5,28 +5,21 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.cleveroad.pulltorefresh.firework.FireworkyPullToRefreshLayout;
 import com.daobao.asus.dbbaseframe.mvp.view.BaseFragment;
 import com.mlly.xxalarm.R;
-import com.mlly.xxalarm.activity.MainActivity;
 import com.mlly.xxalarm.presenter.WeatherFragmentPresenter;
 import com.mlly.xxalarm.weather.FutureWeatherInfo;
 import com.mlly.xxalarm.weather.GridWeatherInfo;
 import com.mlly.xxalarm.weather.LifeSuggestion;
 import com.mlly.xxalarm.weather.NowWeatherInfo;
-
 import java.util.List;
-
 import static android.content.ContentValues.TAG;
 
 /**
