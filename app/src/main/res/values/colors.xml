@@ -8,4 +8,5 @@
     <color name="transparent">#2000</color>
     <color name="snackbar">#3DBAD6</color>
     <color name="viewLine">#66CCFF</color>
+    <color name="black">#000000</color>
 </resources>

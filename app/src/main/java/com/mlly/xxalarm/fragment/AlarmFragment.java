@@ -51,8 +51,6 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
 
     private AlarmManager mAlarm;                     //闹钟对象
 
-    private PendingIntent sender;                    //闹钟效果的广播
-
     private int mHour,mMinute;                      //声明响铃时间
 
     private Calendar mCalendar;                       //日历
@@ -60,6 +58,8 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
     private Activity activity;
 
     private Context context;
+
+    private PendingIntent sender;                  //传递意图
 
     @Override
     protected AlarmFragmentPresenter binPresenter() {
@@ -98,7 +98,6 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
                  * FloatingActionButton点击事件
                  */
                 setTime();
-                mAlarmAdapter.notifyDataSetChanged();
             }
         });
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
@@ -164,6 +163,7 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
                 alarmTime = (TextView) itemView.findViewById(R.id.alarm_time);
                 alarmDelay = (TextView) itemView.findViewById(R.id.alarm_delay);
                 openAlarm = (Switch)itemView.findViewById(R.id.open_alarm);
+
                 /**
                  * 设置开关事件
                  */
@@ -171,6 +171,8 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
                 openAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        //设定pendingIntent接受自定义闹铃广播
+                        sender = PendingIntent.getBroadcast(activity,0,new Intent("repeatAlarm"),0);
                         if(isChecked){
                             //分别获取闹铃响铃时间以及闹铃间隔时间（用冒号分割存储于数组中）
                             String[] triggerTime=alarmTime.getText().toString().split(":");
@@ -180,8 +182,6 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
                             calendar1.set(Calendar.MINUTE,Integer.parseInt(triggerTime[1]));
                             //得到点击触发的毫秒值（即闹钟提醒时间）
                             long triggerAtMillis= calendar1.getTimeInMillis();
-                            //设定pendinngIntent接受自定义闹铃广播
-                            sender = PendingIntent.getBroadcast(activity,0,new Intent("repeatAlarm"),0);
                             //判断如果当前系统时间大于设置的闹铃时间，则在第二天开始启用该闹铃
                             if(System.currentTimeMillis()>triggerAtMillis){
                                 triggerAtMillis=triggerAtMillis+24*60*60*1000;
@@ -227,6 +227,8 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
                 mHour=hourOfDay;
                 mMinute=minute;
                 mAlarmList.add(new AlarmInfo(mHour+":"+mMinute,"5小时"));
+                mAlarmAdapter.notifyDataSetChanged();
+
                 //TODO 计算时间
             }
         },mHour,mMinute,true);

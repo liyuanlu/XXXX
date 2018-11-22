@@ -19,7 +19,6 @@ import com.daobao.asus.dbbaseframe.mvp.view.BaseActivity;
 import com.mlly.xxalarm.R;
 import com.mlly.xxalarm.adapter.MViewPagerAdapter;
 import com.mlly.xxalarm.fragment.AlarmFragment;
-import com.mlly.xxalarm.fragment.MyFragment;
 import com.mlly.xxalarm.fragment.WeatherFragment;
 import com.mlly.xxalarm.presenter.MainPresenter;
 import com.mlly.xxalarm.transformer.ZoomOutTransformer;
@@ -110,7 +109,7 @@ public class MainActivity extends BaseActivity<MainPresenter> {
                 switch (i){
                     case 0:mLinearLayout.setBackgroundResource(R.mipmap.weather_background_day);
                         break;
-                    case 1:mLinearLayout.setBackgroundResource(R.color.grey);
+                    case 1:mLinearLayout.setBackgroundResource(R.color.black);
                         break;
                     default:
                         break;

@@ -1,6 +1,7 @@
 package com.mlly.xxalarm.weather;
 
 import android.app.AlarmManager;
+import android.app.PendingIntent;
 
 /**
  * Created by liyuanlu on 2018/11/22.

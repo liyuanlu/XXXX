@@ -27,10 +27,12 @@
 
                 <ImageView
                     android:id="@+id/car_washing_icon"
-                    android:layout_width="@android:dimen/notification_large_icon_width"
-                    android:layout_height="@android:dimen/notification_large_icon_height"
+                    android:layout_width="@dimen/dp_44"
+                    android:layout_height="@dimen/dp_44"
                     android:layout_gravity="center"
-                    android:paddingTop="@dimen/dp_10"/>
+                    android:paddingTop="@dimen/dp_10"
+                    android:src="@drawable/car_washing"
+                    />
 
                 <TextView
                     android:id="@+id/car_washing"
@@ -54,10 +56,10 @@
 
                 <ImageView
                     android:id="@+id/dressing_icon"
-                    android:layout_width="@android:dimen/notification_large_icon_width"
-                    android:layout_height="@android:dimen/notification_large_icon_height"
+                    android:layout_width="@dimen/dp_44"
+                    android:layout_height="@dimen/dp_44"
                     android:layout_gravity="center"
-                    android:src="@mipmap/ic_launcher"
+                    android:src="@drawable/dressing"
                     android:paddingTop="@dimen/dp_10"/>
 
                 <TextView
@@ -89,10 +91,10 @@
 
                 <ImageView
                     android:id="@+id/flu_icon"
-                    android:layout_width="@android:dimen/notification_large_icon_width"
-                    android:layout_height="@android:dimen/notification_large_icon_height"
+                    android:layout_width="@dimen/dp_44"
+                    android:layout_height="@dimen/dp_44"
                     android:layout_gravity="center"
-                    android:src="@mipmap/ic_launcher"
+                    android:src="@drawable/flu"
                     android:paddingTop="@dimen/dp_10"/>
 
                 <TextView
@@ -117,10 +119,10 @@
 
                 <ImageView
                     android:id="@+id/sport_icon"
-                    android:layout_width="@android:dimen/notification_large_icon_width"
-                    android:layout_height="@android:dimen/notification_large_icon_height"
+                    android:layout_width="@dimen/dp_44"
+                    android:layout_height="@dimen/dp_44"
                     android:layout_gravity="center"
-                    android:src="@mipmap/ic_launcher"
+                    android:src="@drawable/sport"
                     android:paddingTop="@dimen/dp_10"/>
 
                 <TextView
@@ -150,9 +152,9 @@
             <ImageView
                 android:id="@+id/travel_icon"
                 android:layout_gravity="center"
-                android:src="@mipmap/ic_launcher"
-                android:layout_width="@android:dimen/notification_large_icon_width"
-                android:layout_height="@android:dimen/notification_large_icon_height"
+                android:src="@drawable/travel"
+                android:layout_width="@dimen/dp_44"
+                android:layout_height="@dimen/dp_44"
                 android:paddingTop="@dimen/dp_10"/>
             <TextView
                 android:id="@+id/travel"
@@ -175,10 +177,10 @@
             <ImageView
                 android:id="@+id/uv_icon"
                 android:layout_gravity="center"
-                android:src="@mipmap/ic_launcher"
-                android:layout_width="@android:dimen/notification_large_icon_width"
-                android:layout_height="@android:dimen/notification_large_icon_height"
-                android:paddingTop="@dimen/dp_10"/>
+                android:src="@drawable/uv"
+                android:layout_width="@dimen/dp_44"
+                android:layout_height="@dimen/dp_44"
+                android:paddingTop="@dimen/dp_10" />
             <TextView
                 android:id="@+id/uv"
                 android:layout_width="wrap_content"
