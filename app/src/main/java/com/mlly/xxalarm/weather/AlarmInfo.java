@@ -1,5 +1,7 @@
 package com.mlly.xxalarm.weather;
 
+import android.app.AlarmManager;
+
 /**
  * Created by liyuanlu on 2018/11/22.
  */
