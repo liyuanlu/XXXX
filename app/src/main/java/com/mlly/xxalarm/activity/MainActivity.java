@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.daobao.asus.dbbaseframe.mvp.view.BaseActivity;
 import com.mlly.xxalarm.R;
 import com.mlly.xxalarm.adapter.MViewPagerAdapter;
+import com.mlly.xxalarm.fragment.AlarmFragment;
 import com.mlly.xxalarm.fragment.MyFragment;
 import com.mlly.xxalarm.fragment.WeatherFragment;
 import com.mlly.xxalarm.presenter.MainPresenter;
@@ -38,6 +39,8 @@ public class MainActivity extends BaseActivity<MainPresenter> {
     private List<Fragment> mFragments;                  //存放Fragment
 
     private WeatherFragment mWeatherFragment;           //天气Fragment
+
+    private AlarmFragment mAlarmFragment;               //闹钟Fragment
 
     //将要申请的权限
     private String[] permissions = new String[]{
@@ -86,8 +89,9 @@ public class MainActivity extends BaseActivity<MainPresenter> {
         mLinearLayout.setBackgroundResource(R.mipmap.weather_background_day);
         mTabLayout.setTabTextColors(ColorStateList.valueOf(Color.WHITE));
         mWeatherFragment = new WeatherFragment();
+        mAlarmFragment = new AlarmFragment();
         mFragments.add(mWeatherFragment);
-        mFragments.add(new MyFragment());
+        mFragments.add(mAlarmFragment);
         mTitles.add("天气");
         mTitles.add("闹钟");
         MViewPagerAdapter mViewPagerAdapter = new MViewPagerAdapter(getSupportFragmentManager(),
