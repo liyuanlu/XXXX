@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -68,7 +69,8 @@ public class MainActivity extends BaseActivity<MainPresenter> {
     /**
      * 占用状态栏
      */
-    @TargetApi(21)
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setFlag() {
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE |

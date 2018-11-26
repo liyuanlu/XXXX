@@ -2,8 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/background"
-        android:title="背景" />
-    <item android:id="@+id/back"
-        android:title="back" />
+        android:id="@+id/delete"
+        android:title="删除" />
+
 </menu>

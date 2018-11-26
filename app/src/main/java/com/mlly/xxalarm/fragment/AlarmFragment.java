@@ -1,11 +1,11 @@
 package com.mlly.xxalarm.fragment;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,24 +15,27 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.PopupMenu;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.daobao.asus.dbbaseframe.mvp.view.BaseFragment;
 import com.mlly.xxalarm.R;
 import com.mlly.xxalarm.activity.MainActivity;
 import com.mlly.xxalarm.presenter.AlarmFragmentPresenter;
+import com.mlly.xxalarm.receiver.AlarmRingReceiver;
+import com.mlly.xxalarm.service.AlarmRingService;
 import com.mlly.xxalarm.weather.AlarmInfo;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import static android.content.Context.ALARM_SERVICE;
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by liyuanlu on 2018/11/22.
@@ -49,17 +52,11 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
 
     private MAdapter mAlarmAdapter;                 //适配器
 
-    private AlarmManager mAlarm;                     //闹钟对象
+    private AlarmManager mAlarmManager;             //闹钟管理器对象
 
-    private int mHour,mMinute;                      //声明响铃时间
+    private PopupMenu mPopupMenu;
 
-    private Calendar mCalendar;                       //日历
-
-    private Activity activity;
-
-    private Context context;
-
-    private PendingIntent sender;                  //传递意图
+    private int position;
 
     @Override
     protected AlarmFragmentPresenter binPresenter() {
@@ -80,23 +77,28 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
     }
 
     private void init() {
-        activity=getActivity();
-        context=getContext();
         mRecyclerView = (RecyclerView)view.findViewById(R.id.alarm_list);
         mFloatingButton = (FloatingActionButton)view.findViewById(R.id.add_alarm);
         mAlarmList=new ArrayList<>();
-        mAlarm= (AlarmManager)activity.getSystemService(ALARM_SERVICE);
-        //设置声明时间格式
-        mCalendar = Calendar.getInstance();
-        mHour=mCalendar.get(Calendar.HOUR_OF_DAY);
-        mMinute=mCalendar.get(Calendar.MINUTE);
+        mPopupMenu = new PopupMenu(getActivity(),view.findViewById(R.id.alarm_list));
+        mAlarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        mPopupMenu.getMenuInflater().inflate(R.menu.menu,mPopupMenu.getMenu());
+        mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                String title = menuItem.getTitle().toString();
+                if (title.equals("删除")){
+                    mAlarmList.remove(position);
+                    mAlarmAdapter.notifyDataSetChanged();
+                    return true;
+                }
+                return false;
+            }
+        });
         //FloatingActionButton点击事件
         mFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /**
-                 * FloatingActionButton点击事件
-                 */
                 setTime();
             }
         });
@@ -104,6 +106,7 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
         mRecyclerView.setLayoutManager(manager);
         mAlarmAdapter = new MAdapter(mAlarmList,getActivity());
         mRecyclerView.setAdapter(mAlarmAdapter);
+
     }
 
 
@@ -163,45 +166,14 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
                 alarmTime = (TextView) itemView.findViewById(R.id.alarm_time);
                 alarmDelay = (TextView) itemView.findViewById(R.id.alarm_delay);
                 openAlarm = (Switch)itemView.findViewById(R.id.open_alarm);
-
-                /**
-                 * 设置开关事件
-                 */
                 openAlarm.setChecked(true);
                 openAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        //设定pendingIntent接受自定义闹铃广播
-                        sender = PendingIntent.getBroadcast(activity,0,new Intent("repeatAlarm"),0);
-                        if(isChecked){
-                            //分别获取闹铃响铃时间以及闹铃间隔时间（用冒号分割存储于数组中）
-                            String[] triggerTime=alarmTime.getText().toString().split(":");
-                            //通过Calendar分别获取对应的小时和分钟（需要将String转换为int）
-                            Calendar calendar1 = Calendar.getInstance();
-                            calendar1.set(Calendar.HOUR_OF_DAY,Integer.parseInt(triggerTime[0]));
-                            calendar1.set(Calendar.MINUTE,Integer.parseInt(triggerTime[1]));
-                            //得到点击触发的毫秒值（即闹钟提醒时间）
-                            long triggerAtMillis= calendar1.getTimeInMillis();
-                            //判断如果当前系统时间大于设置的闹铃时间，则在第二天开始启用该闹铃
-                            if(System.currentTimeMillis()>triggerAtMillis){
-                                triggerAtMillis=triggerAtMillis+24*60*60*1000;
-                            }
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                AlarmManager.AlarmClockInfo alarmClockInfo = new AlarmManager.AlarmClockInfo(triggerAtMillis, null);
-                                mAlarm.setAlarmClock(alarmClockInfo,sender);
-                                //alarmManagerSet.setWindow(AlarmManager.RTC_WAKEUP,triggerAtMillis,0,pendingIntentSet);
-                                Log.d("banben","24+");
-                            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//android 6.0以上7.0一下的手机
-                                mAlarm.setExact(AlarmManager.RTC_WAKEUP,triggerAtMillis,sender);
-                                Log.d("banben","23+");
-                            } else {
-                                mAlarm.set(AlarmManager.RTC_WAKEUP, triggerAtMillis,sender);
-                                Log.d("banben","其他");
-                            }
-                            Toast.makeText(activity,"设置成功", Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            mAlarm.cancel(sender);
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (b){
+
+                        }else {
+
                         }
                     }
                 });
@@ -219,19 +191,32 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
     }
 
 
-    //使用timePickerDialog设置闹铃响铃时间
+    /**
+     * 设置闹钟
+     */
     public void setTime(){
-        TimePickerDialog timePickerDialog =new TimePickerDialog(activity, new TimePickerDialog.OnTimeSetListener() {
+        Calendar calendar = Calendar.getInstance();
+        TimePickerDialog timePickerDialog =new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                mHour=hourOfDay;
-                mMinute=minute;
-                mAlarmList.add(new AlarmInfo(mHour+":"+mMinute,"5小时"));
+                mAlarmList.add(new AlarmInfo(hourOfDay+":"+minute,"5小时"));
                 mAlarmAdapter.notifyDataSetChanged();
-
-                //TODO 计算时间
+                Calendar c = Calendar.getInstance();
+                c.set(Calendar.HOUR_OF_DAY,hourOfDay);
+                c.set(Calendar.MINUTE,minute);
+                Intent intent = new Intent(getActivity(),AlarmRingService.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (Build.VERSION.SDK_INT >= 26){
+                    getActivity().startForegroundService(intent);
+                }else {
+                    getActivity().startService(intent);
+                }
+                Intent intent1 = new Intent();
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),100,
+                        new Intent("com.mlly.alarm.alarmring"),0);
+                mAlarmManager.set(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pendingIntent);
             }
-        },mHour,mMinute,true);
+        },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),true);
         timePickerDialog.show();
     }
 }

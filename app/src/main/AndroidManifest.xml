@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.WRITE_APN_SETTINGS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
         android:allowBackup="true"
@@ -24,19 +26,36 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="sgkTWC4LZolXfS8wefCZR2vM6i3eGtaz"></meta-data>
 
-        <activity android:name=".activity.MainActivity"
+        <activity
+            android:name=".activity.MainActivity"
             android:configChanges="orientation|screenSize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".service.AlarmRingService">
+        </service>
+        <service android:name=".service.GuardService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":guard"></service>
 
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
+        <receiver android:name=".receiver.AlarmRingReceiver">
+            <intent-filter>
+                <action android:name="com.mlly.alarm.alarmring"/>
+                <action android:name="com.mlly.alarm.connectalarm"/>
+                <action android:name="com.mlly.alarm.connectguard"/>
+            </intent-filter>
+        </receiver>
 
+        <activity android:name=".activity.AlarmRingActivity"></activity>
     </application>
 
 </manifest>
