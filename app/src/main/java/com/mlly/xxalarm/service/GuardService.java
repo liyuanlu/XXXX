@@ -5,17 +5,21 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import com.mlly.xxalarm.R;
+import com.mlly.xxalarm.receiver.AlarmRingReceiver;
 
 /**
  * Created by liyuanlu on 2018/11/26.
  */
 public class GuardService extends Service {
+
+    private AlarmRingReceiver mReceiver;
 
     @Nullable
     @Override
@@ -26,6 +30,11 @@ public class GuardService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        IntentFilter filter = new IntentFilter("com.mlly.alarm.alarmring");
+        filter.addAction("com.mlly.alarm.connectalarm");
+        filter.addAction("com.mlly.alarm.connectguard");
+        mReceiver = new AlarmRingReceiver();
+        registerReceiver(mReceiver,filter);
         start();
     }
 
@@ -39,6 +48,7 @@ public class GuardService extends Service {
         super.onDestroy();
         Intent intent = new Intent("com.mlly.alarm.connectalarm");
         sendBroadcast(intent);
+        unregisterReceiver(mReceiver);
     }
 
     private void start(){

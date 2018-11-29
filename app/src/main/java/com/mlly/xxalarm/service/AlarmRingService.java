@@ -36,7 +36,6 @@ public class AlarmRingService extends Service {
         filter.addAction("com.mlly.alarm.connectguard");
         mReceiver = new AlarmRingReceiver();
         registerReceiver(mReceiver,filter);
-        startGuardService();
         start();
     }
 
@@ -68,6 +67,7 @@ public class AlarmRingService extends Service {
                     .build();
             startForeground(100,notification);
         }
+        startGuardService();
     }
 
 

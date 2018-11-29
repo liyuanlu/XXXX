@@ -7,4 +7,5 @@
     <string name="wind_scale">风力等级</string>
     <string name="wind_direction_degree">风向角</string>
     <string name="wind_direction">风向</string>
+    <string name="delete_alarm">删除</string>
 </resources>

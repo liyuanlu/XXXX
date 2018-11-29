@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,19 +21,16 @@ import android.widget.PopupMenu;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
-
+import android.widget.Toast;
 import com.daobao.asus.dbbaseframe.mvp.view.BaseFragment;
 import com.mlly.xxalarm.R;
-import com.mlly.xxalarm.activity.MainActivity;
+import com.mlly.xxalarm.Util.SpUtil;
 import com.mlly.xxalarm.presenter.AlarmFragmentPresenter;
-import com.mlly.xxalarm.receiver.AlarmRingReceiver;
 import com.mlly.xxalarm.service.AlarmRingService;
 import com.mlly.xxalarm.weather.AlarmInfo;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import static android.content.ContentValues.TAG;
+import java.util.List;
 
 /**
  * Created by liyuanlu on 2018/11/22.
@@ -48,15 +43,11 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
 
     private FloatingActionButton mFloatingButton;   //悬浮按钮
 
-    private ArrayList<AlarmInfo> mAlarmList;         //闹钟信息List
+    private List<AlarmInfo> mAlarmList;         //闹钟信息List
 
     private MAdapter mAlarmAdapter;                 //适配器
 
     private AlarmManager mAlarmManager;             //闹钟管理器对象
-
-    private PopupMenu mPopupMenu;
-
-    private int position;
 
     @Override
     protected AlarmFragmentPresenter binPresenter() {
@@ -79,23 +70,12 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
     private void init() {
         mRecyclerView = (RecyclerView)view.findViewById(R.id.alarm_list);
         mFloatingButton = (FloatingActionButton)view.findViewById(R.id.add_alarm);
-        mAlarmList=new ArrayList<>();
-        mPopupMenu = new PopupMenu(getActivity(),view.findViewById(R.id.alarm_list));
+        //从SharedPreferences中获取存放的对象
+        mAlarmList = SpUtil.getList(getActivity(),"alarmlist");
+        if (mAlarmList == null){
+            mAlarmList = new ArrayList<>();
+        }
         mAlarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        mPopupMenu.getMenuInflater().inflate(R.menu.menu,mPopupMenu.getMenu());
-        mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                String title = menuItem.getTitle().toString();
-                if (title.equals("删除")){
-                    mAlarmList.remove(position);
-                    mAlarmAdapter.notifyDataSetChanged();
-                    return true;
-                }
-                return false;
-            }
-        });
-        //FloatingActionButton点击事件
         mFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,22 +86,57 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
         mRecyclerView.setLayoutManager(manager);
         mAlarmAdapter = new MAdapter(mAlarmList,getActivity());
         mRecyclerView.setAdapter(mAlarmAdapter);
-
+        //设置RecycleView中Item的点击事件
+        mAlarmAdapter.setRecyclerViewOnItemClickListener(new RecyclerViewOnItemClickListener() {
+            @Override
+            public void onItemClickListener(View view, int position) {
+                Toast.makeText(getActivity(),"你点击了Item",Toast.LENGTH_SHORT).show();
+            }
+        });
+        //设置RecycleView中Item的长按事件
+        mAlarmAdapter.setRecyclerViewOnItemLongClickListener(new RecyclerViewOnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClickListener(View view, int position) {
+                PopupMenu popupMenu = new PopupMenu(getActivity(),view);
+                popupMenu.getMenuInflater().inflate(R.menu.menu,popupMenu.getMenu());
+                popupMenu.show();
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()){
+                            case R.id.delete_alarm:
+                                mAlarmManager.cancel(mAlarmList.get(position).getPendingIntent());
+                                mAlarmList.remove(position);
+                                mAlarmAdapter.notifyDataSetChanged();
+                                break;
+                                default:break;
+                        }
+                        return true;
+                    }
+                });
+                return true;
+            }
+        });
     }
 
 
     /**
      * RecyclerView适配器
      */
-    class MAdapter extends RecyclerView.Adapter<MAdapter.BaseHolder>{
+    class MAdapter extends RecyclerView.Adapter<MAdapter.BaseHolder> implements View.OnClickListener,
+                                                                                View.OnLongClickListener{
 
-        private ArrayList<AlarmInfo> alarmInfos;
+        private List<AlarmInfo> alarmInfos;
 
         private Context context;
 
         private BaseHolder mBaseHolder;
 
-        public MAdapter(ArrayList<AlarmInfo> alarmInfos, Context context) {
+        private RecyclerViewOnItemClickListener onItemClickListener;
+
+        private RecyclerViewOnItemLongClickListener onItemLongClickListener;
+
+        public MAdapter(List<AlarmInfo> alarmInfos, Context context) {
             this.alarmInfos = alarmInfos;
             this.context = context;
         }
@@ -134,14 +149,17 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
         @NonNull
         @Override
         public BaseHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            mBaseHolder = new BaseHolder(LayoutInflater.from(context).inflate(R.layout.item_alarm,
-                    viewGroup,false));
+            View root = LayoutInflater.from(context).inflate(R.layout.item_alarm,viewGroup,false);
+            root.setOnClickListener(this);
+            root.setOnLongClickListener(this);
+            mBaseHolder = new BaseHolder(root);
             return mBaseHolder;
         }
 
         @Override
         public void onBindViewHolder(@NonNull BaseHolder baseHolder, int i) {
             baseHolder.setData(alarmInfos.get(i));
+            baseHolder.root.setTag(i);
         }
 
         @Override
@@ -153,6 +171,27 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
             }
         }
 
+        @Override
+        public void onClick(View view) {
+            if (onItemClickListener != null){
+                onItemClickListener.onItemClickListener(view,(Integer)view.getTag());
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            return onItemLongClickListener != null &&
+                    onItemLongClickListener.onItemLongClickListener(view,(Integer)view.getTag());
+        }
+
+        private void setRecyclerViewOnItemClickListener(RecyclerViewOnItemClickListener recyclerViewOnItemClickListener){
+            this.onItemClickListener = recyclerViewOnItemClickListener;
+        }
+
+        private void setRecyclerViewOnItemLongClickListener(RecyclerViewOnItemLongClickListener recyclerViewOnItemLongClickListener){
+            this.onItemLongClickListener = recyclerViewOnItemLongClickListener;
+        }
+
         class BaseHolder extends RecyclerView.ViewHolder{
 
             private TextView alarmTime;
@@ -161,19 +200,24 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
 
             private Switch openAlarm;
 
+            private View root;
+
             public BaseHolder(@NonNull View itemView) {
                 super(itemView);
                 alarmTime = (TextView) itemView.findViewById(R.id.alarm_time);
                 alarmDelay = (TextView) itemView.findViewById(R.id.alarm_delay);
                 openAlarm = (Switch)itemView.findViewById(R.id.open_alarm);
                 openAlarm.setChecked(true);
+                this.root = itemView;
                 openAlarm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        AlarmInfo alarmInfo = mAlarmList.get((Integer) itemView.getTag());
                         if (b){
-
+                            mAlarmManager.set(AlarmManager.RTC_WAKEUP,
+                                    alarmInfo.getTimeInMillis(),alarmInfo.getPendingIntent());
                         }else {
-
+                            mAlarmManager.cancel(alarmInfo.getPendingIntent());
                         }
                     }
                 });
@@ -184,10 +228,24 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
              * @param alarmInfo
              */
             public void setData(AlarmInfo alarmInfo){
-                alarmTime.setText(alarmInfo.alarmTime);
-                alarmDelay.setText(alarmInfo.alarmDelay);
+                alarmTime.setText(alarmInfo.getAlarmTime());
+                alarmDelay.setText(alarmInfo.getAlarmDelay());
             }
         }
+    }
+
+    /**
+     * 点击事件接口
+     */
+    public interface RecyclerViewOnItemClickListener{
+        void onItemClickListener(View view,int position);
+    }
+
+    /**
+     * 长按事件接口
+     */
+    public interface RecyclerViewOnItemLongClickListener{
+        boolean onItemLongClickListener(View view,int position);
     }
 
 
@@ -199,8 +257,6 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
         TimePickerDialog timePickerDialog =new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                mAlarmList.add(new AlarmInfo(hourOfDay+":"+minute,"5小时"));
-                mAlarmAdapter.notifyDataSetChanged();
                 Calendar c = Calendar.getInstance();
                 c.set(Calendar.HOUR_OF_DAY,hourOfDay);
                 c.set(Calendar.MINUTE,minute);
@@ -211,12 +267,25 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
                 }else {
                     getActivity().startService(intent);
                 }
-                Intent intent1 = new Intent();
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),100,
                         new Intent("com.mlly.alarm.alarmring"),0);
+                AlarmInfo alarmInfo = new AlarmInfo(hourOfDay+":"+minute,"5小时",pendingIntent);
+                alarmInfo.setTimeInMillis(c.getTimeInMillis());
+                mAlarmList.add(alarmInfo);
+                mAlarmAdapter.notifyDataSetChanged();
                 mAlarmManager.set(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pendingIntent);
             }
         },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),true);
         timePickerDialog.show();
+    }
+
+    /**
+     * 在Fragment结束时用SharedPreferences储存当前创建的AlarmInfo对象
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        SpUtil.clear(getActivity());
+        SpUtil.putList(getActivity(),"alarmlist",mAlarmList);
     }
 }
