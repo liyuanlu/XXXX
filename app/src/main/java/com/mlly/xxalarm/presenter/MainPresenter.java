@@ -3,15 +3,15 @@ package com.mlly.xxalarm.presenter;
 import android.os.Handler;
 import android.os.Message;
 import com.daobao.asus.dbbaseframe.mvp.presenter.BasePresenter;
-import com.mlly.xxalarm.activity.MainActivity;
+import com.mlly.xxalarm.activity.WeatherActivity;
 import com.mlly.xxalarm.model.MainModel;
 
 /**
  * Created by liyuanlu on 2018/11/10.
  */
-public class MainPresenter extends BasePresenter<MainModel,MainActivity> {
+public class MainPresenter extends BasePresenter<MainModel,WeatherActivity> {
 
-    public MainPresenter(MainActivity view) {
+    public MainPresenter(WeatherActivity view) {
         super(view);
     }
 

@@ -16,7 +16,9 @@ public class AlarmRingReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (action.equals("com.mlly.alarm.alarmring")){
+            int position = intent.getIntExtra("position",-1);
             Intent intent1 = new Intent(context,AlarmRingActivity.class);
+            intent1.putExtra("position",position);
             intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent1);
         }else if (action.equals("com.mlly.alarm.connectalarm")){

@@ -16,7 +16,7 @@ public class MViewPagerAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> fragments;       //需要用到的Fragment
 
-    public MViewPagerAdapter(FragmentManager fm,List<String> titles,List<Fragment> fragments) {
+    public MViewPagerAdapter(FragmentManager fm, List<String> titles, List<Fragment> fragments) {
         super(fm);
         this.titles = titles;
         this.fragments = fragments;

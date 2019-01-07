@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 
 import com.mlly.xxalarm.R;
 import com.mlly.xxalarm.receiver.AlarmRingReceiver;
@@ -19,8 +18,6 @@ import com.mlly.xxalarm.receiver.AlarmRingReceiver;
  * Created by liyuanlu on 2018/11/25.
  */
 public class AlarmRingService extends Service {
-
-    private AlarmRingReceiver mReceiver;
 
     @Nullable
     @Override
@@ -34,8 +31,6 @@ public class AlarmRingService extends Service {
         IntentFilter filter = new IntentFilter("com.mlly.alarm.alarmring");
         filter.addAction("com.mlly.alarm.connectalarm");
         filter.addAction("com.mlly.alarm.connectguard");
-        mReceiver = new AlarmRingReceiver();
-        registerReceiver(mReceiver,filter);
         start();
     }
 
@@ -59,13 +54,14 @@ public class AlarmRingService extends Service {
                     .build();
             startForeground(101,notification);
         }else {
+            /*
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this,channelId);
             Notification notification = builder
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setPriority(Notification.PRIORITY_MIN)
                     .setCategory(Notification.CATEGORY_SERVICE)
                     .build();
-            startForeground(100,notification);
+            startForeground(100,notification);*/
         }
         startGuardService();
     }
@@ -84,9 +80,6 @@ public class AlarmRingService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Intent intent = new Intent("com.mlly.alarm.connectguard");
-        sendBroadcast(intent);
-        unregisterReceiver(mReceiver);
     }
 
 

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:background="#000"
-    android:paddingTop="@dimen/dp_10"
-    android:id="@+id/linear_layout">
-    <android.support.design.widget.TabLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MainActivity">
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:tabGravity="center"
-        android:id="@+id/tab_layout">
-    </android.support.design.widget.TabLayout>
-    <android.support.v4.view.ViewPager
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/view_paper">
-    </android.support.v4.view.ViewPager>
-</LinearLayout>
+        android:text="打开天气"
+        android:id="@+id/skip_weather"/>
+
+    <Button
+        android:id="@+id/skip_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="打开便签"
+        app:layout_constraintTop_toBottomOf="@+id/skip_weather" />
+</android.support.constraint.ConstraintLayout>

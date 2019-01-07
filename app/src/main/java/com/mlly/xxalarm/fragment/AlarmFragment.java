@@ -71,7 +71,7 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
         mRecyclerView = (RecyclerView)view.findViewById(R.id.alarm_list);
         mFloatingButton = (FloatingActionButton)view.findViewById(R.id.add_alarm);
         //从SharedPreferences中获取存放的对象
-        mAlarmList = SpUtil.getList(getActivity(),"alarmlist");
+        mAlarmList = SpUtil.getList(getActivity().getApplicationContext(),"alarmlist");
         if (mAlarmList == null){
             mAlarmList = new ArrayList<>();
         }
@@ -267,8 +267,10 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
                 }else {
                     getActivity().startService(intent);
                 }
+                Intent intent1 = new Intent("com.mlly.alarm.alarmring");
+                intent1.putExtra("position",mAlarmList.size());
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),100,
-                        new Intent("com.mlly.alarm.alarmring"),0);
+                        intent1,0);
                 AlarmInfo alarmInfo = new AlarmInfo(hourOfDay+":"+minute,"5小时",pendingIntent);
                 alarmInfo.setTimeInMillis(c.getTimeInMillis());
                 mAlarmList.add(alarmInfo);
@@ -285,7 +287,7 @@ public class AlarmFragment extends BaseFragment<AlarmFragmentPresenter> {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        SpUtil.clear(getActivity());
-        SpUtil.putList(getActivity(),"alarmlist",mAlarmList);
+        SpUtil.clear(getActivity().getApplicationContext());
+        SpUtil.putList(getActivity().getApplicationContext(),"alarmlist",mAlarmList);
     }
 }
