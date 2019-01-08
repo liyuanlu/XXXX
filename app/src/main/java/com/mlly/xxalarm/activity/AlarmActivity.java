@@ -63,8 +63,8 @@ public class AlarmActivity extends BaseActivity<AlarmPresenter> {
 
 
     private void init() {
-        mRecyclerView = (RecyclerView)view.findViewById(R.id.alarm_list);
-        mFloatingButton = (FloatingActionButton)view.findViewById(R.id.add_alarm);
+        mRecyclerView = (RecyclerView)findViewById(R.id.alarm_list);
+        mFloatingButton = (FloatingActionButton)findViewById(R.id.add_alarm);
         //从SharedPreferences中获取存放的对象
         mAlarmList = SpUtil.getList(getApplicationContext(),"alarmlist");
         if (mAlarmList == null){
