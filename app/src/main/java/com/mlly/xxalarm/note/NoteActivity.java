@@ -14,7 +14,6 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-
 import com.mlly.xxalarm.R;
 import com.mlly.xxalarm.note.data.NoteAdapter;
 import com.mlly.xxalarm.note.data.NoteContract;
