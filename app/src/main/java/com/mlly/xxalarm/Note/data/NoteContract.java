@@ -1,4 +1,4 @@
-package com.mlly.xxalarm.data;
+package com.mlly.xxalarm.Note.data;
 
 import android.provider.BaseColumns;
 

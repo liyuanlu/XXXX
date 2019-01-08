@@ -1,17 +1,16 @@
-package com.mlly.xxalarm.adapter;
+package com.mlly.xxalarm.Note.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mlly.xxalarm.Note.NoteInfo;
 import com.mlly.xxalarm.R;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * 便签RecyclerView适配器类
@@ -80,8 +79,14 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
      */
     public void add(NoteInfo info){
         mNoteInfos.add(mNoteInfos.size(),info);
-        notifyItemInserted(mNoteInfos.size() - 1);
-        notifyItemRangeChanged(mNoteInfos.size() - 1,mNoteInfos.size());
+        notifyItemInserted(mNoteInfos.size());
+        notifyItemRangeChanged(mNoteInfos.size(),mNoteInfos.size());
+    }
+
+    public String getItemCode(RecyclerView recyclerView,int position){
+        int now = mNoteInfos.size() - 1;
+        NoteViewHolder holder = (NoteViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+        return Objects.requireNonNull(holder).code;
     }
 
     @Override
@@ -132,7 +137,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         TextView mNoteSetTime;
 
-        LinearLayout mNoteItemLayout;
+        String code;
 
         View root;                  //该Item
 
@@ -140,13 +145,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
             super(itemView);
             mNoteContent = (TextView)itemView.findViewById(R.id.note_content);
             mNoteSetTime = (TextView)itemView.findViewById(R.id.note_set_time);
-            mNoteItemLayout = (LinearLayout)itemView.findViewById(R.id.item_note_layout);
             root = itemView;
         }
 
         public void setData(NoteInfo noteInfo){
             mNoteContent.setText(noteInfo.getContent());
             mNoteSetTime.setText(noteInfo.getSetTime());
+            code = noteInfo.getCode();
         }
     }
 }

@@ -27,7 +27,7 @@
             android:value="sgkTWC4LZolXfS8wefCZR2vM6i3eGtaz" />
 
         <activity
-            android:name=".activity.WeatherActivity"
+            android:name=".weather.WeatherActivity"
             android:configChanges="orientation|screenSize" />
 
         <service android:name=".service.AlarmRingService" />
@@ -49,11 +49,10 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.AlarmRingActivity" />
-        <activity android:name=".activity.NoteActivity">
+        <activity android:name=".Note.NoteActivity">
         </activity>
-        <activity android:name=".activity.NoteEditActivity" />
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".Note.NoteEditActivity" />
+        <activity android:name=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

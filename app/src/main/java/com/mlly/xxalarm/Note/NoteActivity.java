@@ -1,4 +1,4 @@
-package com.mlly.xxalarm.activity;
+package com.mlly.xxalarm.Note;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -8,16 +8,20 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
-import com.mlly.xxalarm.Note.NoteInfo;
+
 import com.mlly.xxalarm.R;
-import com.mlly.xxalarm.adapter.NoteAdapter;
-import com.mlly.xxalarm.data.NoteContract;
-import com.mlly.xxalarm.data.NoteDBHelper;
+import com.mlly.xxalarm.Note.data.NoteAdapter;
+import com.mlly.xxalarm.Note.data.NoteContract;
+import com.mlly.xxalarm.Note.data.NoteDBHelper;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
 
 
 public class NoteActivity extends AppCompatActivity {
@@ -32,7 +36,9 @@ public class NoteActivity extends AppCompatActivity {
 
     private NoteDBHelper mDBHelper;
 
-    private boolean isDeleted = true;
+    private RecyclerView mNoteView;
+
+    private StaggeredGridLayoutManager manager;
 
     private String mUpdateCode;                                 //需要更新项的识别码
 
@@ -40,19 +46,57 @@ public class NoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
+        setToolBar();
         initView();
     }
 
     private void initView() {
-        RecyclerView mNoteView = (RecyclerView) findViewById(R.id.note_view);
+        mNoteView = (RecyclerView) findViewById(R.id.note_view);
         mFloatingButton = (FloatingActionButton) findViewById(R.id.add_note);
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(COLUMN_COUNT, StaggeredGridLayoutManager.VERTICAL);
+        manager = new StaggeredGridLayoutManager(COLUMN_COUNT, StaggeredGridLayoutManager.VERTICAL);
         mNoteView.setLayoutManager(manager);
         mAdapter = new NoteAdapter(mNoteInfos,this);
         mDBHelper = new NoteDBHelper(this,null);
         setListener();
         queryAllFromDB();
         mNoteView.setAdapter(mAdapter);
+    }
+
+    private void setToolBar(){
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);                             //使用ToolBar替换AppBar
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        getSupportActionBar().setDisplayShowTitleEnabled(false);    //禁止显示标题
+    }
+
+    /**
+     * 显示PopupMenu菜单
+     * @param view 菜单显示的位置
+     * @param position 需要删除的item的位置
+     */
+    private void showPopupMenu(View view,int position){
+        PopupMenu menu = new PopupMenu(this,view);
+        menu.getMenuInflater().inflate(R.menu.menu,menu.getMenu());
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.delete_item:
+                        deleteFromDB(mNoteInfos.get(position).getCode());
+                        mAdapter.remove(position);                  //移除该项item
+                        break;
+                    default:break;
+                }
+                return true;
+            }
+        });
+        menu.show();                                                //显示菜单
     }
 
     /**
@@ -72,7 +116,7 @@ public class NoteActivity extends AppCompatActivity {
         mAdapter.setLongClickListener(new NoteAdapter.RecyclerViewOnItemLongClickListener() {
             @Override
             public boolean OnItemLongClickListener(View view, int position) {
-                mAdapter.remove(position);
+                showPopupMenu(view,position);
                 return true;
             }
         });
@@ -127,13 +171,12 @@ public class NoteActivity extends AppCompatActivity {
         NoteInfo info = new NoteInfo(content,setTime);
         info.setCode(code);
         //储存到数据库
-        /*
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(NoteContract.NoteEntry.COLUMN_NOTE_CONTENT,content);
         values.put(NoteContract.NoteEntry.COLUMN_NOTE_SET_TIME,setTime);
         values.put(NoteContract.NoteEntry.COLUMN_NOTE_CODE,code);
-        long newRowId = db.insert(NoteContract.NoteEntry.TABLE_NAME,null,values);*/
+        long newRowId = db.insert(NoteContract.NoteEntry.TABLE_NAME,null,values);
         mAdapter.add(info);
     }
 
