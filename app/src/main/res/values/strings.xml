@@ -9,4 +9,6 @@
     <string name="wind_direction">风向</string>
     <string name="delete_alarm">删除</string>
     <string name="save">保存</string>
+    <string name="note">便签</string>
+    <string name="edit">编辑</string>
 </resources>

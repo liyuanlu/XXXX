@@ -1,4 +1,4 @@
-package com.mlly.xxalarm.data;
+package com.mlly.xxalarm.note.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

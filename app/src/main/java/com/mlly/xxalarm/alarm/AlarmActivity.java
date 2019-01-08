@@ -1,4 +1,4 @@
-package com.mlly.xxalarm.activity;
+package com.mlly.xxalarm.alarm;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -25,10 +25,9 @@ import android.widget.Toast;
 
 import com.daobao.asus.dbbaseframe.mvp.view.BaseActivity;
 import com.mlly.xxalarm.R;
-import com.mlly.xxalarm.Util.SpUtil;
-import com.mlly.xxalarm.presenter.AlarmPresenter;
-import com.mlly.xxalarm.service.AlarmRingService;
-import com.mlly.xxalarm.weather.AlarmInfo;
+import com.mlly.xxalarm.alarm.SpUtil;
+import com.mlly.xxalarm.alarm.AlarmPresenter;
+import com.mlly.xxalarm.alarm.AlarmInfo;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -99,7 +98,7 @@ public class AlarmActivity extends BaseActivity<AlarmPresenter> {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()){
-                            case R.id.delete_alarm:
+                            case R.id.delete_item:
                                 mAlarmManager.cancel(mAlarmList.get(position).getPendingIntent());
                                 mAlarmList.remove(position);
                                 mAlarmAdapter.notifyDataSetChanged();

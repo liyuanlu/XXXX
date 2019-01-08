@@ -9,4 +9,5 @@
     <color name="snackbar">#3DBAD6</color>
     <color name="viewLine">#66CCFF</color>
     <color name="black">#000000</color>
+    <color name="light_grey">#F2F2F2</color>
 </resources>
