@@ -1,4 +1,4 @@
-package com.mlly.xxalarm.Note.data;
+package com.mlly.xxalarm.note.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.mlly.xxalarm.Note.NoteInfo;
+import com.mlly.xxalarm.note.NoteInfo;
 import com.mlly.xxalarm.R;
 import java.util.ArrayList;
 import java.util.Objects;

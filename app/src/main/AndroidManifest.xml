@@ -30,28 +30,24 @@
             android:name=".weather.WeatherActivity"
             android:configChanges="orientation|screenSize" />
 
-        <service android:name=".service.AlarmRingService" />
-        <service
-            android:name=".service.GuardService"
-            android:enabled="true"
-            android:exported="true"
-            android:process=":guard" />
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
 
-        <receiver android:name=".receiver.AlarmRingReceiver">
+        <receiver android:name=".alarm.AlarmRingReceiver">
             <intent-filter>
                 <action android:name="com.mlly.alarm.alarmring" />
                 <action android:name="com.mlly.alarm.connectalarm" />
                 <action android:name="com.mlly.alarm.connectguard" />
             </intent-filter>
         </receiver>
+        <activity android:name=".alarm.AlarmActivity"/>
+        <activity android:name=".alarm.AlarmRingActivity"/>
 
-        <activity android:name=".Note.NoteActivity">
-        </activity>
-        <activity android:name=".Note.NoteEditActivity" />
+        <activity android:name=".note.NoteActivity"/>
+        <activity android:name=".note.NoteEditActivity" />
         <activity android:name=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

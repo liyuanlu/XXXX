@@ -1,4 +1,4 @@
-package com.mlly.xxalarm.Note;
+package com.mlly.xxalarm.note;
 
 /**
  * Created by liyuanlu on 2019/1/5.

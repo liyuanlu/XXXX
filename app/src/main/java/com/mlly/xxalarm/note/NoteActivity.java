@@ -1,4 +1,4 @@
-package com.mlly.xxalarm.Note;
+package com.mlly.xxalarm.note;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -16,9 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mlly.xxalarm.R;
-import com.mlly.xxalarm.Note.data.NoteAdapter;
-import com.mlly.xxalarm.Note.data.NoteContract;
-import com.mlly.xxalarm.Note.data.NoteDBHelper;
+import com.mlly.xxalarm.note.data.NoteAdapter;
+import com.mlly.xxalarm.note.data.NoteContract;
+import com.mlly.xxalarm.note.data.NoteDBHelper;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;

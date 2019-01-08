@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
-import com.mlly.xxalarm.Note.NoteActivity;
+import com.mlly.xxalarm.note.NoteActivity;
 import com.mlly.xxalarm.R;
 import com.mlly.xxalarm.weather.WeatherActivity;
 
