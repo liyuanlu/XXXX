@@ -7,8 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.mlly.xxalarm.note.NoteInfo;
 import com.mlly.xxalarm.R;
+import com.mlly.xxalarm.note.NoteInfo;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
