@@ -3,8 +3,9 @@
     <item>
         <shape>
             <corners android:radius="5dp"/>
-            <stroke android:color="@color/colorPrimaryDark"/>
-            <solid android:color="#3000"/>
+            <stroke android:color="@color/grey"
+                android:width="@dimen/dp_1"/>
+            <solid android:color="@color/white"/>
         </shape>
     </item>
 </selector>
