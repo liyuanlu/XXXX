@@ -7,9 +7,13 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -77,9 +81,10 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
     private TextView mWindSpeed;
     private TextView mTemperature;
     private TextView mPressure;
-    private LinearLayout mLinearLayoutWeather;
-    private FireworkyPullToRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private Snackbar snackbar;
+    private AppBarLayout mAppbarLayout;
+    private Toolbar mToolbar;
     private static int[] mIcons;                    //天气状态图标Id数组
 
     /**
@@ -209,13 +214,37 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
         mWindSpeed = (TextView) findViewById(R.id.wind_speed);
         mTemperature = (TextView) findViewById(R.id.temperature);
         mPressure = (TextView) findViewById(R.id.pressure);
-        mLinearLayoutWeather = (LinearLayout) findViewById(R.id.linear_layout_weather);
-        mSwipeRefreshLayout = (FireworkyPullToRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         //设置监听器
-        mSwipeRefreshLayout.setOnRefreshListener(new FireworkyPullToRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 startLoacte();
+            }
+        });
+        mAppbarLayout = (AppBarLayout)findViewById(R.id.appbar_layout);
+        mAppbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+                if (i >= 0){
+                    mSwipeRefreshLayout.setEnabled(true);
+                }else {
+                    mSwipeRefreshLayout.setEnabled(false);
+                }
+            }
+        });
+        mToolbar = (Toolbar)findViewById(R.id.weather_toolbar);
+        mToolbar.inflateMenu(R.menu.weather_menu);
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.search_city_weather:
+                        Toast.makeText(getApplicationContext(),"search",Toast.LENGTH_LONG).show();
+                        break;
+                        default:break;
+                }
+                return true;
             }
         });
         mPresenter.startLocate();
