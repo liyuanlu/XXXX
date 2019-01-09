@@ -2,11 +2,14 @@ package com.mlly.xxalarm.note;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.mlly.xxalarm.R;
 
@@ -15,7 +18,6 @@ import java.util.Objects;
 public class NoteEditActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText mNoteEdit;
-
     private int mType = NoteInfo.CREATE_NEW_NOTE_CODE;
 
     @Override
@@ -58,7 +60,7 @@ public class NoteEditActivity extends AppCompatActivity implements View.OnClickL
 
     private void initView() {
         mNoteEdit = (EditText) findViewById(R.id.note_edit);
-        Button mCommit = (Button) findViewById(R.id.commit);
+        ImageView mCommit = (ImageView) findViewById(R.id.commit);
         mCommit.setOnClickListener(this);
     }
 
