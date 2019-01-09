@@ -2,7 +2,11 @@ package com.mlly.xxalarm.weather;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+
 import com.daobao.asus.dbbaseframe.mvp.presenter.BasePresenter;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by liyuanlu on 2018/11/10.
@@ -27,6 +31,7 @@ public class WeatherPresenter extends BasePresenter<WeatherModel,WeatherActivity
         switch (msg.what){
             case WeatherModel.LOCATE_SUCCESS:
                 requestWeatherData();
+                setCity();
                 mView.getNowAddress(mModel.getNowAddress());
                 break;
             case WeatherModel.LOCATE_FAILED:
@@ -57,7 +62,10 @@ public class WeatherPresenter extends BasePresenter<WeatherModel,WeatherActivity
                 mView.showMessage("空指针异常");
                 break;
             case WeatherModel.REFRESH_FINISHED:
-                mView.stopRefresh();
+                mView.stopRefresh();break;
+            case 123456:
+                mView.setCityName(msg.getData().getString("cityName"));
+                break;
             default:break;
         }
     }
@@ -80,6 +88,10 @@ public class WeatherPresenter extends BasePresenter<WeatherModel,WeatherActivity
      */
     private void requestWeatherData(){
         mModel.requestWeatherData();
+    }
+
+    private void setCity(){
+        mView.setCityName(mModel.getCityName());
     }
 
 }

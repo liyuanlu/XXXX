@@ -7,12 +7,14 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -81,6 +83,7 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
     private TextView mWindSpeed;
     private TextView mTemperature;
     private TextView mPressure;
+    private TextView mCityName;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Snackbar snackbar;
     private AppBarLayout mAppbarLayout;
@@ -115,6 +118,10 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
         setContentView(R.layout.activity_weather);
         initView();
         initPermission();
+    }
+
+    public void setCityName(String cityName){
+        mCityName.setText(cityName);
     }
 
     /**
@@ -214,6 +221,7 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
         mWindSpeed = (TextView) findViewById(R.id.wind_speed);
         mTemperature = (TextView) findViewById(R.id.temperature);
         mPressure = (TextView) findViewById(R.id.pressure);
+        mCityName = (TextView)findViewById(R.id.city_name);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         //设置监听器
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

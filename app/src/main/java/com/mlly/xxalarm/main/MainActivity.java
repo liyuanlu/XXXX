@@ -37,14 +37,6 @@ public class MainActivity extends AppCompatActivity{
         mInfos.add(new Info(R.drawable.note,"便签"));
         mInfos.add(new Info(R.drawable.alarm,"闹钟"));
         mInfos.add(new Info(R.drawable.setting,"设置"));
-        mInfos.add(new Info(R.drawable.weather,"天气"));
-        mInfos.add(new Info(R.drawable.note,"便签"));
-        mInfos.add(new Info(R.drawable.alarm,"闹钟"));
-        mInfos.add(new Info(R.drawable.setting,"设置"));
-        mInfos.add(new Info(R.drawable.weather,"天气"));
-        mInfos.add(new Info(R.drawable.note,"便签"));
-        mInfos.add(new Info(R.drawable.alarm,"闹钟"));
-        mInfos.add(new Info(R.drawable.setting,"设置"));
     }
 
     private void initView() {

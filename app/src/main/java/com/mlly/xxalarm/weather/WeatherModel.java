@@ -1,7 +1,9 @@
 package com.mlly.xxalarm.weather;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -69,6 +71,8 @@ public class WeatherModel extends BaseModel {
 
     private String mCityName;                               //城市完整名字
 
+    private String mCity;
+
     private String mNowAddress;                             //当前位置
 
     private OkHttpClient mOKHttpClient;                     //网络请求对象
@@ -105,7 +109,7 @@ public class WeatherModel extends BaseModel {
 
     /**
      * 获取生活建议对象
-     * @return
+     * @return 生活建议对象
      */
     public LifeSuggestion getLifeSuggestion(){
         if (mLifeSuggestion != null && mLifeSuggestion.getResults() != null){
@@ -118,7 +122,7 @@ public class WeatherModel extends BaseModel {
 
     /**
      * 获取未来天气对象
-     * @return
+     * @return 未来天气对象
      */
     public FutureWeatherInfo getFutureWeatherInfo(){
         if (mFutureWeatherInfo != null && mFutureWeatherInfo.getResults() != null){
@@ -131,7 +135,7 @@ public class WeatherModel extends BaseModel {
 
     /**
      * 获取当前天气对象
-     * @return
+     * @return 当前天气对象
      */
     public NowWeatherInfo getNowWeatherInfo(){
         if (mNowWeatherInfo != null && mNowWeatherInfo.getResults() != null){
@@ -273,8 +277,8 @@ public class WeatherModel extends BaseModel {
      * 获取当前完整城市名
      * @return
      */
-    public String getCityWholeName(){
-        return mCityName;
+    public String getCityName(){
+        return mCity;
     }
 
     /**
@@ -300,6 +304,7 @@ public class WeatherModel extends BaseModel {
                 latitude = bdLocation.getLatitude();
                 getCityWholeName();
                 mCityName = cityName;
+                mCity = city;
                 //向P层发送消息
                 sendEmptyMessage(LOCATE_SUCCESS);
                 sendEmptyMessage(REFRESH_FINISHED);
@@ -332,6 +337,12 @@ public class WeatherModel extends BaseModel {
                 }
             }
             cityName = province + city;
+            Message message = new Message();
+            message.what = 123456;
+            Bundle bundle = new Bundle();
+            bundle.putString("cityName",city);
+            message.setData(bundle);
+            sendMessage(message);
         }
     }
 }
