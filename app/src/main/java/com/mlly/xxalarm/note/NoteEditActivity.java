@@ -1,6 +1,9 @@
 package com.mlly.xxalarm.note;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
@@ -24,11 +27,19 @@ public class NoteEditActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_edit);
+        setFlag();
         setToolBar();
         initView();
         getOldContent();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setFlag() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+    }
     /**
      * 设置Toolbar
      */
