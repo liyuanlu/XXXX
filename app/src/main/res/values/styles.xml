@@ -10,6 +10,16 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- Base application theme. -->
+    <style name="BlueTheme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/viewLine</item>
+        <item name="colorPrimaryDark">@color/snowy_background</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">30sp</item>
     </style>

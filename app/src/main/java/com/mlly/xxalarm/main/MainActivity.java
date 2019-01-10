@@ -11,6 +11,7 @@ import android.view.View;
 import com.mlly.xxalarm.alarm.AlarmActivity;
 import com.mlly.xxalarm.R;
 import com.mlly.xxalarm.note.NoteActivity;
+import com.mlly.xxalarm.setting.SettingActivity;
 import com.mlly.xxalarm.weather.WeatherActivity;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity{
                     case 0:skipToWeatherActivity();break;
                     case 1:skipToNoteActivity();break;
                     case 2:skipToAlarmActivity();break;
+                    case 3:skipToSettingActivity();break;
                     default:break;
                 }
             }
@@ -78,5 +80,12 @@ public class MainActivity extends AppCompatActivity{
      */
     private void skipToWeatherActivity() {
         startActivity(new Intent(MainActivity.this,WeatherActivity.class));
+    }
+
+    /**
+     * 跳转到设置活动
+     */
+    private void skipToSettingActivity() {
+        startActivity(new Intent(MainActivity.this,SettingActivity.class));
     }
 }
