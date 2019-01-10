@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="@color/colorAccent">
+        android:id="@+id/coordinator_layout">
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,9 +20,9 @@
                 app:expandedTitleMarginEnd="@dimen/dp_44"
                 app:expandedTitleMarginStart="@dimen/dp_44"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                android:background="@mipmap/ic_launcher"
                 app:collapsedTitleGravity="top"
-                app:titleEnabled="false">
+                app:titleEnabled="false"
+                android:id="@+id/collapsing_layout">
 
                 <android.support.v7.widget.Toolbar
                     android:layout_width="match_parent"

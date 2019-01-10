@@ -47,6 +47,10 @@ public class WeatherModel extends BaseModel {
 
     public static final int GET_GRID_WEATHER_SUCCESS = 8;
 
+    public static final int SEND_LOCATED_CITY_NAME = 9;
+
+    public static final int SET_CITY_NAME = 10;
+
     //当前天气请求地址
     private static final String NOW_WEATHER_ADDRESS_HEAD = "https://api.seniverse.com/v3/weather/now.json?key=des12nko8oihfzte&location=";
 
@@ -100,6 +104,7 @@ public class WeatherModel extends BaseModel {
 
     public GridWeatherInfo getGridWeather(){
         if (mGridWeather != null && mGridWeather.getResults() != null){
+            sendEmptyMessage(SET_CITY_NAME);
             return  mGridWeather;
         }else {
             sendEmptyMessage(NULL_POINTER);
@@ -147,15 +152,22 @@ public class WeatherModel extends BaseModel {
     }
 
     /**
+     * 获取完整城市名
+     */
+    public String getmCityName(){
+        return mCityName;
+    }
+
+    /**
      * 请求天气数据
      * 解析天气数据
      */
-    public void requestWeatherData(){
+    public void requestWeatherData(String cityName){
         mOKHttpClient = new OkHttpClient();
         mGson = new Gson();
-        if (mCityName != null){
+        if (cityName != null){
             Request nowWeatherRequest = new Request.Builder().
-                    url(NOW_WEATHER_ADDRESS_HEAD + mCityName + NOW_WEATHER_ADDRESS_TAIL)
+                    url(NOW_WEATHER_ADDRESS_HEAD + cityName + NOW_WEATHER_ADDRESS_TAIL)
                     .build();
             Call nowWeatherCall = mOKHttpClient.newCall(nowWeatherRequest);
             //单开线程进行网络请求
@@ -177,7 +189,7 @@ public class WeatherModel extends BaseModel {
                 }
             }).start();
             Request futureWeatherRequest = new Request.Builder()
-                    .url(FUTURE_WEATHER_ADDRESS_HEAD + mCityName + FUTURE_WEATHER_ADDRESS_TAIL)
+                    .url(FUTURE_WEATHER_ADDRESS_HEAD + cityName + FUTURE_WEATHER_ADDRESS_TAIL)
                     .build();
             Call futureWeatherCall = mOKHttpClient.newCall(futureWeatherRequest);
             new Thread(new Runnable() {
@@ -196,7 +208,7 @@ public class WeatherModel extends BaseModel {
                 }
             }).start();
             Request lifeSuggestionRequest = new Request.Builder()
-                    .url(LIFE_SUGGESTION_ADDRESS_HEAD + mCityName + LIFE_SUGGESTION_ADDRESS_TAIL)
+                    .url(LIFE_SUGGESTION_ADDRESS_HEAD + cityName + LIFE_SUGGESTION_ADDRESS_TAIL)
                     .build();
             Call lifeSuggestionCall = mOKHttpClient.newCall(lifeSuggestionRequest);
             new Thread(new Runnable() {
@@ -274,7 +286,7 @@ public class WeatherModel extends BaseModel {
     }
 
     /**
-     * 获取当前完整城市名
+     * 获取当前城市名
      * @return
      */
     public String getCityName(){
@@ -338,7 +350,7 @@ public class WeatherModel extends BaseModel {
             }
             cityName = province + city;
             Message message = new Message();
-            message.what = 123456;
+            message.what = SEND_LOCATED_CITY_NAME;
             Bundle bundle = new Bundle();
             bundle.putString("cityName",city);
             message.setData(bundle);

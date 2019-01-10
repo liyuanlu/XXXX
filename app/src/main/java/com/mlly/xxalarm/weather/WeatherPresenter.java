@@ -31,7 +31,6 @@ public class WeatherPresenter extends BasePresenter<WeatherModel,WeatherActivity
         switch (msg.what){
             case WeatherModel.LOCATE_SUCCESS:
                 requestWeatherData();
-                setCity();
                 mView.getNowAddress(mModel.getNowAddress());
                 break;
             case WeatherModel.LOCATE_FAILED:
@@ -63,9 +62,11 @@ public class WeatherPresenter extends BasePresenter<WeatherModel,WeatherActivity
                 break;
             case WeatherModel.REFRESH_FINISHED:
                 mView.stopRefresh();break;
-            case 123456:
-                mView.setCityName(msg.getData().getString("cityName"));
+            case WeatherModel.SEND_LOCATED_CITY_NAME:
+                mView.setLocatedCityName(msg.getData().getString("cityName"));
                 break;
+                case WeatherModel.SET_CITY_NAME:
+                    break;
             default:break;
         }
     }
@@ -84,14 +85,22 @@ public class WeatherPresenter extends BasePresenter<WeatherModel,WeatherActivity
     }
 
     /**
-     * 请求天气
+     * 请求当前城市天气
      */
     private void requestWeatherData(){
-        mModel.requestWeatherData();
+        mModel.requestWeatherData(mModel.getmCityName());
+    }
+
+    /**
+     * 请求指定城市天气
+     */
+    public void requestCityWeatherData(String cityName){
+        mModel.requestWeatherData(cityName);
+        mView.getNowAddress("");
     }
 
     private void setCity(){
-        mView.setCityName(mModel.getCityName());
+        mView.setLocatedCityName(mModel.getCityName());
     }
 
 }

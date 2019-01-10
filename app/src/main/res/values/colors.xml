@@ -10,4 +10,8 @@
     <color name="viewLine">#66CCFF</color>
     <color name="black">#000000</color>
     <color name="light_grey">#F2F2F2</color>
+    <color name="sunny_background">#FCCE74</color>
+    <color name="rainy_background">#909EE9</color>
+    <color name="snowy_background">#5DB0FF</color>
+    <color name="windy_background">#4468B6</color>
 </resources>

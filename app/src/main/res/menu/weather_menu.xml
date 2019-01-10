@@ -3,6 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/search_city_weather"
         android:title="@string/search"
-        android:icon="@drawable/search"
+        android:icon="@drawable/ic_action_search"
         app:showAsAction="always"/>
 </menu>

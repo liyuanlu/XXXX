@@ -1,7 +1,9 @@
 package com.mlly.xxalarm.weather;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -9,14 +11,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,6 +35,7 @@ import com.mlly.xxalarm.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class WeatherActivity extends BaseActivity<WeatherPresenter> {
 
@@ -88,8 +96,10 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
     private Snackbar snackbar;
     private AppBarLayout mAppbarLayout;
     private Toolbar mToolbar;
+    private String mInputCity;
+    private String mCityAddress;
     private static int[] mIcons;                    //天气状态图标Id数组
-
+    private static int[] mBackgrounds;
     /**
      * 天气图标初始化
      */
@@ -103,6 +113,9 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
                 R.drawable.w_25, R.drawable.w_26, R.drawable.w_27, R.drawable.w_28, R.drawable.w_29,
                 R.drawable.w_30, R.drawable.w_31, R.drawable.w_32, R.drawable.w_33, R.drawable.w_34,
                 R.drawable.w_35, R.drawable.w_36, R.drawable.w_37, R.drawable.w_38, R.drawable.w_99
+        };
+        mBackgrounds = new int[]{
+                R.drawable.sunny,R.drawable.windy,R.drawable.rainy,R.drawable.snowy
         };
     }
 
@@ -120,8 +133,9 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
         initPermission();
     }
 
-    public void setCityName(String cityName){
+    public void setLocatedCityName(String cityName){
         mCityName.setText(cityName);
+        mInputCity = cityName;
     }
 
     /**
@@ -242,20 +256,47 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
             }
         });
         mToolbar = (Toolbar)findViewById(R.id.weather_toolbar);
-        mToolbar.inflateMenu(R.menu.weather_menu);
-        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+        setSupportActionBar(mToolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()){
-                    case R.id.search_city_weather:
-                        Toast.makeText(getApplicationContext(),"search",Toast.LENGTH_LONG).show();
-                        break;
-                        default:break;
-                }
-                return true;
+            public void onClick(View view) {
+                finish();
             }
         });
         mPresenter.startLocate();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.weather_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.search_city_weather:
+                searchCityWeather();
+                break;
+                default:break;
+        }
+        return true;
+    }
+
+    private void searchCityWeather() {
+        final EditText text = new EditText(this);
+        new AlertDialog.Builder(this).setTitle("请输入城市名")
+                .setIcon(R.drawable.search)
+                .setView(text)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mPresenter.requestCityWeatherData(text.getText().toString());
+                        mInputCity = text.getText().toString();
+                    }
+                }).setNegativeButton("取消",null).show();
     }
 
     public void getNowAddress(String address){
@@ -269,7 +310,9 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
     public void getNowWeatherData(NowWeatherInfo nowWeatherInfo){
         if (nowWeatherInfo != null){
             NowWeatherInfo.ResultsBean.NowBean nowBean = nowWeatherInfo.getResults().get(0).getNow();
-            mNowIcon.setImageResource(mIcons[Integer.parseInt(nowBean.getCode())]);
+            int weatherCode = Integer.parseInt(nowBean.getCode());
+            mNowIcon.setImageResource(mIcons[weatherCode]);
+            setWeatherBackground(weatherCode);
             mNowTemperature.setText(nowBean.getTemperature());
             mNowText.setText(nowBean.getText());
         }else {
@@ -278,10 +321,42 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
     }
 
     /**
+     * 更换天气背景
+     */
+    public void setWeatherBackground(int code){
+        CollapsingToolbarLayout layout = (CollapsingToolbarLayout)findViewById(R.id.collapsing_layout);
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinator_layout);
+        if (code >= 0 && code <= 3){
+            layout.setBackgroundResource(R.drawable.sunny);
+            coordinatorLayout.setBackgroundColor(Color.parseColor("#FCCE74"));
+        }else if (code >= 4 && code <= 9){
+            layout.setBackgroundResource(R.drawable.windy);
+            coordinatorLayout.setBackgroundColor(Color.parseColor("#4468B6"));
+        }else if (code >= 10 && code <= 19){
+            layout.setBackgroundResource(R.drawable.rainy);
+            coordinatorLayout.setBackgroundColor(Color.parseColor("#909EE9"));
+        }else if (code >= 20 && code <= 25){
+            layout.setBackgroundResource(R.drawable.snowy);
+            coordinatorLayout.setBackgroundColor(Color.parseColor("#5DB0FF"));
+        }else {
+            layout.setBackgroundColor(Color.YELLOW);
+            coordinatorLayout.setBackgroundColor(Color.CYAN);
+        }
+    }
+
+    /**
+     * 设置指定城市名字
+     */
+    public void setCityName(){
+        mCityName.setText(mInputCity);
+    }
+
+    /**
      * 天气更新成功提示
      */
     public void refreshSuccess(){
         showMessage("天气更新成功");
+        setCityName();
     }
 
     public void refreshFailed(){

@@ -10,8 +10,8 @@
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
-        android:id="@+id/note_edit_toolbar">
+        android:id="@+id/note_edit_toolbar"
+        android:layout_marginTop="@dimen/dp_20">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         <ImageView
             android:layout_width="@dimen/dp_20"
             android:layout_height="@dimen/dp_20"
-            android:src="@drawable/check"
+            android:src="@drawable/ic_action_done"
             android:layout_gravity="right"
             android:id="@+id/commit"
             android:layout_marginRight="@dimen/dp_10"/>
