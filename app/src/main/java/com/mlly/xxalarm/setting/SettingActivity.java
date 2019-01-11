@@ -27,14 +27,21 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void getSPTheme() {
-        SharedPreferences sp = getSharedPreferences("save_theme", Context.MODE_PRIVATE);
-        int theme = sp.getInt("bule", 0);
+        SharedPreferences sp = getSharedPreferences("save_theme",Context.MODE_PRIVATE);
+        int theme = sp.getInt("color",0);
         Log.d("theme", "" + theme);
-        switch (theme) {
-            case 1:
-                setTheme(R.style.BlueTheme);
+        switch (theme){
+            case 0:setTheme(R.style.AppTheme);
                 break;
-            default:
+            case 1:setTheme(R.style.BlueTheme);
+                break;
+            case 2:setTheme(R.style.PinkTheme);
+                break;
+            case 3:setTheme(R.style.GreenTheme);
+                break;
+            case 4:setTheme(R.style.PurpleTheme);
+                break;
+            default:setTheme(R.style.AppTheme);
                 break;
         }
         setResult(100);

@@ -54,7 +54,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".setting.SettingActivity"></activity>
+        <activity android:name=".setting.SettingActivity" />
+
+
     </application>
 
 </manifest>
