@@ -3,7 +3,9 @@ package com.mlly.xxalarm.weather;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -52,38 +54,23 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
     private ImageView mNowIcon;
     private TextView mNowAddress;
     private TextView mNowText;
-    private TextView mTextView;
     private TextView mTodayText;
     private TextView mTodayLow;
-    private TextView mTextView2;
-    private TextView mTextView3;
     private TextView mTodayHigh;
     private ImageView mTodayIcon;
-    private TextView mTextView1;
     private TextView mTomorrowText;
     private TextView mTomorrowLow;
-    private TextView mTextView4;
-    private TextView mTextView5;
     private TextView mTomorrowHigh;
     private ImageView mTomorrowIcon;
-    private TextView mTextView6;
     private TextView mAfterTomorrowText;
     private TextView mAfterTomorrowLow;
-    private TextView mTextView7;
-    private TextView mTextView8;
     private TextView mAfterTomorrowHigh;
     private ImageView mAfterTomorrowIcon;
-    private ImageView mCarWashingIcon;
     private TextView mCarWashing;
-    private ImageView mDressingIcon;
     private TextView mDressing;
-    private ImageView mFluIcon;
     private TextView mFlu;
-    private ImageView mSportIcon;
     private TextView mSport;
-    private ImageView mTravelIcon;
     private TextView mTravel;
-    private ImageView mUvIcon;
     private TextView mUv;
     private TextView mWindDirection;
     private TextView mWindDirectionDegree;
@@ -94,12 +81,8 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
     private TextView mCityName;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Snackbar snackbar;
-    private AppBarLayout mAppbarLayout;
-    private Toolbar mToolbar;
     private String mInputCity;
-    private String mCityAddress;
     private static int[] mIcons;                    //天气状态图标Id数组
-    private static int[] mBackgrounds;
     /**
      * 天气图标初始化
      */
@@ -114,9 +97,6 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
                 R.drawable.w_30, R.drawable.w_31, R.drawable.w_32, R.drawable.w_33, R.drawable.w_34,
                 R.drawable.w_35, R.drawable.w_36, R.drawable.w_37, R.drawable.w_38, R.drawable.w_99
         };
-        mBackgrounds = new int[]{
-                R.drawable.sunny,R.drawable.windy,R.drawable.rainy,R.drawable.snowy
-        };
     }
 
     @Override
@@ -128,6 +108,7 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setFlag();
+        getSPTheme();
         setContentView(R.layout.activity_weather);
         initView();
         initPermission();
@@ -136,6 +117,17 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
     public void setLocatedCityName(String cityName){
         mCityName.setText(cityName);
         mInputCity = cityName;
+    }
+
+    private void getSPTheme() {
+        SharedPreferences sp = getSharedPreferences("save_theme",Context.MODE_PRIVATE);
+        int theme = sp.getInt("bule",0);
+        Log.d("theme", "" + theme);
+        switch (theme){
+            case 1:setTheme(R.style.BlueTheme);
+                break;
+            default:break;
+        }
     }
 
     /**
@@ -196,38 +188,23 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
         mNowIcon = (ImageView) findViewById(R.id.now_icon);
         mNowAddress = (TextView) findViewById(R.id.now_address);
         mNowText = (TextView) findViewById(R.id.now_text);
-        mTextView = (TextView) findViewById(R.id.textView);
         mTodayText = (TextView) findViewById(R.id.today_text);
         mTodayLow = (TextView) findViewById(R.id.today_low);
-        mTextView2 = (TextView) findViewById(R.id.textView2);
-        mTextView3 = (TextView) findViewById(R.id.textView3);
         mTodayHigh = (TextView) findViewById(R.id.today_high);
         mTodayIcon = (ImageView) findViewById(R.id.today_icon);
-        mTextView1 = (TextView) findViewById(R.id.textView1);
         mTomorrowText = (TextView) findViewById(R.id.tomorrow_text);
         mTomorrowLow = (TextView) findViewById(R.id.tomorrow_low);
-        mTextView4 = (TextView) findViewById(R.id.textView4);
-        mTextView5 = (TextView) findViewById(R.id.textView5);
         mTomorrowHigh = (TextView) findViewById(R.id.tomorrow_high);
         mTomorrowIcon = (ImageView) findViewById(R.id.tomorrow_icon);
-        mTextView6 = (TextView) findViewById(R.id.textView6);
         mAfterTomorrowText = (TextView) findViewById(R.id.after_tomorrow_text);
         mAfterTomorrowLow = (TextView) findViewById(R.id.after_tomorrow_low);
-        mTextView7 = (TextView) findViewById(R.id.textView7);
-        mTextView8 = (TextView) findViewById(R.id.textView8);
         mAfterTomorrowHigh = (TextView) findViewById(R.id.after_tomorrow_high);
         mAfterTomorrowIcon = (ImageView) findViewById(R.id.after_tomorrow_icon);
-        mCarWashingIcon = (ImageView) findViewById(R.id.car_washing_icon);
         mCarWashing = (TextView) findViewById(R.id.car_washing);
-        mDressingIcon = (ImageView) findViewById(R.id.dressing_icon);
         mDressing = (TextView) findViewById(R.id.dressing);
-        mFluIcon = (ImageView) findViewById(R.id.flu_icon);
         mFlu = (TextView) findViewById(R.id.flu);
-        mSportIcon = (ImageView) findViewById(R.id.sport_icon);
         mSport = (TextView) findViewById(R.id.sport);
-        mTravelIcon = (ImageView) findViewById(R.id.travel_icon);
         mTravel = (TextView) findViewById(R.id.travel);
-        mUvIcon = (ImageView) findViewById(R.id.uv_icon);
         mUv = (TextView) findViewById(R.id.uv);
         mWindDirection = (TextView) findViewById(R.id.wind_direction);
         mWindDirectionDegree = (TextView) findViewById(R.id.wind_direction_degree);
@@ -244,7 +221,7 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
                 startLoacte();
             }
         });
-        mAppbarLayout = (AppBarLayout)findViewById(R.id.appbar_layout);
+        AppBarLayout mAppbarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
         mAppbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
@@ -255,7 +232,7 @@ public class WeatherActivity extends BaseActivity<WeatherPresenter> {
                 }
             }
         });
-        mToolbar = (Toolbar)findViewById(R.id.weather_toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.weather_toolbar);
         setSupportActionBar(mToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);

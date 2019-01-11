@@ -1,7 +1,9 @@
 package com.mlly.xxalarm.note;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import com.mlly.xxalarm.R;
@@ -44,9 +47,21 @@ public class NoteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSPTheme();
         setContentView(R.layout.activity_note);
         setToolBar();
         initView();
+    }
+
+    private void getSPTheme() {
+        SharedPreferences sp = getSharedPreferences("save_theme",Context.MODE_PRIVATE);
+        int theme = sp.getInt("bule",0);
+        Log.d("theme", "" + theme);
+        switch (theme){
+            case 1:setTheme(R.style.BlueTheme);
+                break;
+            default:break;
+        }
     }
 
     private void initView() {

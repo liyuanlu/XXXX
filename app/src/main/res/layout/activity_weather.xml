@@ -23,7 +23,6 @@
                 app:collapsedTitleGravity="top"
                 app:titleEnabled="false"
                 android:id="@+id/collapsing_layout">
-
                 <android.support.v7.widget.Toolbar
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"

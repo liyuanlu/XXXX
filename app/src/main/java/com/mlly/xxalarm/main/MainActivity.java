@@ -1,11 +1,15 @@
 package com.mlly.xxalarm.main;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.mlly.xxalarm.alarm.AlarmActivity;
@@ -28,9 +32,21 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSPTheme();
         setContentView(R.layout.activity_main);
         addInfo();
         initView();
+    }
+
+    private void getSPTheme() {
+        SharedPreferences sp = getSharedPreferences("save_theme",Context.MODE_PRIVATE);
+        int theme = sp.getInt("bule",0);
+        Log.d("theme", "" + theme);
+        switch (theme){
+            case 1:setTheme(R.style.BlueTheme);
+                break;
+            default:break;
+        }
     }
 
     private void addInfo() {
@@ -67,6 +83,12 @@ public class MainActivity extends AppCompatActivity{
         startActivity(new Intent(MainActivity.this,AlarmActivity.class));
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 666){
+            recreate();
+        }
+    }
 
     /**
      * 跳转到便签活动
@@ -86,6 +108,6 @@ public class MainActivity extends AppCompatActivity{
      * 跳转到设置活动
      */
     private void skipToSettingActivity() {
-        startActivity(new Intent(MainActivity.this,SettingActivity.class));
+        startActivityForResult(new Intent(MainActivity.this,SettingActivity.class),666);
     }
 }

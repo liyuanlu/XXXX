@@ -58,7 +58,7 @@ public class WeatherPresenter extends BasePresenter<WeatherModel,WeatherActivity
                 }
                 break;
             case WeatherModel.NULL_POINTER:
-                mView.showMessage("空指针异常");
+                mView.showMessage("获取天气失败");
                 break;
             case WeatherModel.REFRESH_FINISHED:
                 mView.stopRefresh();break;
