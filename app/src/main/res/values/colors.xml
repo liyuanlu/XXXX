@@ -14,4 +14,8 @@
     <color name="rainy_background">#909EE9</color>
     <color name="snowy_background">#5DB0FF</color>
     <color name="windy_background">#4468B6</color>
+    <color name="blue">#66CCFF</color>
+    <color name="pink">#FFBBFF</color>
+    <color name="green">#00FA9A</color>
+    <color name="purple">#BF3EFF</color>
 </resources>

@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".setting.SettingActivity">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="change"
-        android:id="@+id/change_theme"/>
+    tools:context=".setting.SettingActivity"
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_64"
+        android:src="@color/blue"
+        android:id="@+id/color_blue"
+        android:layout_margin="@dimen/dp_20"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_64"
+        android:src="@color/pink"
+        android:id="@+id/color_pink"
+        android:layout_margin="@dimen/dp_20"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_64"
+        android:src="@color/green"
+        android:id="@+id/color_green"
+        android:layout_margin="@dimen/dp_20"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_64"
+        android:src="@color/purple"
+        android:id="@+id/color_purple"
+        android:layout_margin="@dimen/dp_20"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_64"
+        android:src="@color/colorPrimary"
+        android:id="@+id/color_default"
+        android:layout_margin="@dimen/dp_20"/>
+
+</LinearLayout>
